@@ -4,8 +4,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	distributiontypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	distributiontypes "cosmossdk.io/x/distribution/types"
+	govtypes "cosmossdk.io/x/gov/types/v1beta1"
 
 	client "github.com/cosmos/ibc-go/v8/modules/core/02-client"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"

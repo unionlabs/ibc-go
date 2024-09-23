@@ -28,7 +28,7 @@ require (
 	github.com/cometbft/cometbft v0.38.11
 	github.com/cosmos/cosmos-db v1.0.2
 	github.com/cosmos/cosmos-proto v1.0.0-beta.5
-	github.com/cosmos/cosmos-sdk v0.50.9
+	github.com/cosmos/cosmos-sdk v0.52.0
 	github.com/cosmos/gogoproto v1.7.0
 	github.com/cosmos/ibc-go/modules/capability v1.0.1
 	github.com/cosmos/ics23/go v0.11.0
@@ -209,3 +209,37 @@ require (
 )
 
 replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
+
+// Cosmos SDK v0.52
+replace (
+	github.com/cosmos/cosmos-sdk => github.com/unionlabs/cosmos-sdk-union 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/accounts => github.com/unionlabs/cosmos-sdk-union/x/accounts 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/accounts/defaults/lockup => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/lockup 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/accounts/defaults/multisig => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/multisig 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/authz => github.com/unionlabs/cosmos-sdk-union/x/authz 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/bank => github.com/unionlabs/cosmos-sdk-union/x/bank 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/circuit => github.com/unionlabs/cosmos-sdk-union/x/circuit 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/consensus => github.com/unionlabs/cosmos-sdk-union/x/consensus 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/distribution => github.com/unionlabs/cosmos-sdk-union/x/distribution  5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/epochs => github.com/unionlabs/cosmos-sdk-union/x/epochs 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/evidence => github.com/unionlabs/cosmos-sdk-union/x/evidence 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/feegrant => github.com/unionlabs/cosmos-sdk-union/x/feegrant 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/gov => github.com/unionlabs/cosmos-sdk-union/x/gov 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/group => github.com/unionlabs/cosmos-sdk-union/x/group 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/mint => github.com/unionlabs/cosmos-sdk-union/x/mint 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/nft => github.com/unionlabs/cosmos-sdk-union/x/nft 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/params => github.com/unionlabs/cosmos-sdk-union/x/params 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/protocolpool => github.com/unionlabs/cosmos-sdk-union/x/protocolpool 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/slashing => github.com/unionlabs/cosmos-sdk-union/x/slashing 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/staking => github.com/unionlabs/cosmos-sdk-union/x/staking 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/client/v2 => github.com/unionlabs/cosmos-sdk-union/client/v2 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/upgrade => github.com/unionlabs/cosmos-sdk-union/client/v2 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/core => cosmossdk.io/core v1.0.0-alpha.1
+
+	github.com/cometbft/cometbft => github.com/unionlabs/cometbft v0.0.0-20240914184101-19d0b7eff401
+	github.com/consensys/gnark-crypto => github.com/unionlabs/gnark-crypto v0.0.0-20231016072529-15c0507b6578
+
+
+	cosmossdk.io/api => cosmossdk.io/api v0.7.3-0.20240815194237-858ec2fcb897
+	cosmossdk.io/store => cosmossdk.io/store v1.0.0-rc.0.0.20240906090851-36d9b25e8981
+)

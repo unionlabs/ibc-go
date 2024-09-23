@@ -7,8 +7,8 @@ import (
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	paramtypes "cosmossdk.io/x/params/types"
+	stakingtypes "cosmossdk.io/x/staking/types"
 )
 
 // StakingKeeper expected staking keeper

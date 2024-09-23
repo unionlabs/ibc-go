@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	govtypesv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govtypesv1 "cosmossdk.io/x/gov/types/v1"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmtypes "github.com/cometbft/cometbft/types"

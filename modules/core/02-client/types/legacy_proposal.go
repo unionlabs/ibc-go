@@ -8,7 +8,7 @@ import (
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	govtypes "cosmossdk.io/x/gov/types/v1beta1"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 )
