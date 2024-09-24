@@ -6,7 +6,7 @@ import (
 
 	testifysuite "github.com/stretchr/testify/suite"
 
-	authkeeper "cosmossdk.io/x/auth/keeper"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 
 	genesistypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/genesis/types"
 	"github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/keeper"

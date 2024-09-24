@@ -7,7 +7,7 @@ import (
 
 	storetypes "cosmossdk.io/store/types"
 
-	crypto "github.com/cometbft/cometbft/proto/tendermint/crypto"
+	cmtprotocrypto "github.com/cometbft/cometbft/api/cometbft/crypto/v1"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/23-commitment/types"
 )
@@ -21,7 +21,7 @@ func (suite *MerkleTestSuite) TestConvertProofs() {
 	nonexistPath := types.NewMerklePath(suite.storeKey.Name(), "NOTMYKEY")
 	value := []byte("MYVALUE")
 
-	var proofOps *crypto.ProofOps
+	var proofOps *cmtprotocrypto.ProofOps
 	testcases := []struct {
 		name      string
 		malleate  func()

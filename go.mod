@@ -232,6 +232,7 @@ replace (
 	cosmossdk.io/x/protocolpool => github.com/unionlabs/cosmos-sdk-union/x/protocolpool 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
 	cosmossdk.io/x/slashing => github.com/unionlabs/cosmos-sdk-union/x/slashing 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
 	cosmossdk.io/x/staking => github.com/unionlabs/cosmos-sdk-union/x/staking 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
+	cosmossdk.io/x/upgrade => github.com/unionlabs/cosmos-sdk-union/x/upgrade 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
 	cosmossdk.io/client/v2 => github.com/unionlabs/cosmos-sdk-union/client/v2 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
 	cosmossdk.io/upgrade => github.com/unionlabs/cosmos-sdk-union/client/v2 5c3e8670172d012e0c727c9cdac2c2d7ddc4382d
 	cosmossdk.io/core => cosmossdk.io/core v1.0.0-alpha.1
