@@ -74,17 +74,17 @@ func (suite *InterchainAccountsTestSuite) TestInitModule() {
 		},
 		{
 			"neither controller or host is set", func() {
-				appModule = ica.NewAppModule(nil, nil)
+				appModule = ica.NewAppModule(nil, nil, nil)
 			}, false, false,
 		},
 		{
 			"only controller is set", func() {
-				appModule = ica.NewAppModule(&app.ICAControllerKeeper, nil)
+				appModule = ica.NewAppModule(nil, &app.ICAControllerKeeper, nil)
 			}, true, false,
 		},
 		{
 			"only host is set", func() {
-				appModule = ica.NewAppModule(nil, &app.ICAHostKeeper)
+				appModule = ica.NewAppModule(nil, nil, &app.ICAHostKeeper)
 			}, false, true,
 		},
 	}

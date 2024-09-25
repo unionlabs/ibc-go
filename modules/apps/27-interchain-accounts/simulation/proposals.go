@@ -22,12 +22,12 @@ const (
 // ProposalMsgs defines the module weighted proposals' contents
 func ProposalMsgs() []simtypes.WeightedProposalMsg {
 	return []simtypes.WeightedProposalMsg{
-		simulation.NewWeightedProposalMsg(
+		simulation.NewWeightedProposalMsgX(
 			OpWeightMsgUpdateParams,
 			DefaultWeightMsgUpdateParams,
 			SimulateHostMsgUpdateParams,
 		),
-		simulation.NewWeightedProposalMsg(
+		simulation.NewWeightedProposalMsgX(
 			OpWeightMsgUpdateParams,
 			DefaultWeightMsgUpdateParams,
 			SimulateControllerMsgUpdateParams,
@@ -36,7 +36,7 @@ func ProposalMsgs() []simtypes.WeightedProposalMsg {
 }
 
 // SimulateHostMsgUpdateParams returns a MsgUpdateParams for the host module
-func SimulateHostMsgUpdateParams(_ *rand.Rand, _ sdk.Context, _ []simtypes.Account) sdk.Msg {
+func SimulateControllerMsgUpdateParams(ctx context.Context, _ *rand.Rand, _ []simtypes.Account, _ coreaddress.Codec) (sdk.Msg, error) {
 	var signer sdk.AccAddress = address.Module("gov")
 	params := types.DefaultParams()
 	params.HostEnabled = false
@@ -44,7 +44,7 @@ func SimulateHostMsgUpdateParams(_ *rand.Rand, _ sdk.Context, _ []simtypes.Accou
 	return &types.MsgUpdateParams{
 		Signer: signer.String(),
 		Params: params,
-	}
+	}, nil
 }
 
 // SimulateControllerMsgUpdateParams returns a MsgUpdateParams for the controller module

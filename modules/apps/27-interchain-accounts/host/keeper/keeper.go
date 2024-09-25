@@ -27,6 +27,7 @@ import (
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	ibcerrors "github.com/cosmos/ibc-go/v8/modules/core/errors"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
+	coretypes "github.com/cosmos/ibc-go/v8/modules/core/types"
 )
 
 // Keeper defines the IBC interchain accounts host keeper
@@ -186,7 +187,7 @@ func (k Keeper) GetOpenActiveChannel(ctx sdk.Context, connectionID, portID strin
 func (k Keeper) GetAllActiveChannels(ctx sdk.Context) []genesistypes.ActiveChannel {
 	store := ctx.KVStore(k.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, []byte(icatypes.ActiveChannelKeyPrefix))
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 
 	var activeChannels []genesistypes.ActiveChannel
 	for ; iterator.Valid(); iterator.Next() {

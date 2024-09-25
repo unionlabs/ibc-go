@@ -12,6 +12,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
 
+	banktypes "cosmossdk.io/x/bank/types"
+	stakingtypes "cosmossdk.io/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -21,10 +23,9 @@ import (
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	banktypes "cosmossdk.io/x/bank/types"
-	stakingtypes "cosmossdk.io/x/staking/types"
 
-	abci "github.com/cometbft/cometbft/abci/types"
+	abci "github.com/cometbft/cometbft/api/cometbft/abci/v1"
+
 	tmtypes "github.com/cometbft/cometbft/types"
 
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
@@ -127,7 +128,7 @@ func SetupWithGenesisValSet(tb testing.TB, valSet *tmtypes.ValidatorSet, genAccs
 
 	// init chain will set the validator set and initialize the genesis accounts
 	_, err = app.InitChain(
-		&abci.RequestInitChain{
+		&abci.InitChainRequest{
 			ChainId:         chainID,
 			Validators:      []abci.ValidatorUpdate{},
 			AppStateBytes:   stateBytes,

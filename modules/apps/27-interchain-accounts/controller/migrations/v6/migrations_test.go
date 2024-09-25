@@ -5,14 +5,13 @@ import (
 
 	testifysuite "github.com/stretchr/testify/suite"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	v6 "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/migrations/v6"
 	"github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
 	icatypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/types"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
+	coretypes "github.com/cosmos/ibc-go/v8/modules/core/types"
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
 	ibcmock "github.com/cosmos/ibc-go/v8/testing/mock"
 )
@@ -189,7 +188,7 @@ func (suite *MigrationsTestSuite) ResetMemStore() {
 	memStore.Delete(capabilitytypes.KeyMemInitialized)
 
 	iterator := memStore.Iterator(nil, nil)
-	defer sdk.LogDeferred(suite.chainA.GetContext().Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(suite.chainA.GetContext().Logger(), func() error { return iterator.Close() })
 
 	for ; iterator.Valid(); iterator.Next() {
 		memStore.Delete(iterator.Key())

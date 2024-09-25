@@ -11,6 +11,7 @@ import (
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	controllertypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	coretypes "github.com/cosmos/ibc-go/v8/modules/core/types"
 )
 
 // MigrateICS27ChannelCapability performs a search on a prefix store using the provided store key and module name.
@@ -25,7 +26,7 @@ func MigrateICS27ChannelCapability(
 	// construct a prefix store using the x/capability index prefix: index->capability owners
 	prefixStore := prefix.NewStore(ctx.KVStore(capabilityStoreKey), capabilitytypes.KeyPrefixIndexCapability)
 	iterator := storetypes.KVStorePrefixIterator(prefixStore, nil)
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 
 	for ; iterator.Valid(); iterator.Next() {
 		// unmarshal the capability index value and set of owners

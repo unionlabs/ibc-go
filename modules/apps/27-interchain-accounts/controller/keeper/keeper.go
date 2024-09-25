@@ -12,6 +12,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	coretypes "github.com/cosmos/ibc-go/v8/modules/core/types"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	"github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
@@ -90,7 +91,7 @@ func (k Keeper) GetConnectionID(ctx sdk.Context, portID, channelID string) (stri
 func (k Keeper) GetAllPorts(ctx sdk.Context) []string {
 	store := ctx.KVStore(k.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, []byte(icatypes.PortKeyPrefix))
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 
 	var ports []string
 	for ; iterator.Valid(); iterator.Next() {
@@ -172,7 +173,7 @@ func (k Keeper) IsActiveChannelClosed(ctx sdk.Context, connectionID, portID stri
 func (k Keeper) GetAllActiveChannels(ctx sdk.Context) []genesistypes.ActiveChannel {
 	store := ctx.KVStore(k.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, []byte(icatypes.ActiveChannelKeyPrefix))
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 
 	var activeChannels []genesistypes.ActiveChannel
 	for ; iterator.Valid(); iterator.Next() {
