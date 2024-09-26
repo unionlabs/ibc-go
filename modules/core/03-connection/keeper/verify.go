@@ -20,7 +20,7 @@ import (
 // VerifyClientState verifies a proof of a client state of the running machine
 // stored on the target machine
 func (k Keeper) VerifyClientState(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -61,7 +61,7 @@ func (k Keeper) VerifyClientState(
 // VerifyClientConsensusState verifies a proof of the consensus state of the
 // specified client stored on the target machine.
 func (k Keeper) VerifyClientConsensusState(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	consensusHeight exported.Height,
@@ -103,7 +103,7 @@ func (k Keeper) VerifyClientConsensusState(
 // VerifyConnectionState verifies a proof of the connection state of the
 // specified connection end stored on the target machine.
 func (k Keeper) VerifyConnectionState(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -150,7 +150,7 @@ func (k Keeper) VerifyConnectionState(
 // VerifyChannelState verifies a proof of the channel state of the specified
 // channel end, under the specified port, stored on the target machine.
 func (k Keeper) VerifyChannelState(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -198,7 +198,7 @@ func (k Keeper) VerifyChannelState(
 // VerifyPacketCommitment verifies a proof of an outgoing packet commitment at
 // the specified port, specified channel, and specified sequence.
 func (k Keeper) VerifyPacketCommitment(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -241,7 +241,7 @@ func (k Keeper) VerifyPacketCommitment(
 // VerifyPacketAcknowledgement verifies a proof of an incoming packet
 // acknowledgement at the specified port, specified channel, and specified sequence.
 func (k Keeper) VerifyPacketAcknowledgement(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -285,7 +285,7 @@ func (k Keeper) VerifyPacketAcknowledgement(
 // incoming packet receipt at the specified port, specified channel, and
 // specified sequence.
 func (k Keeper) VerifyPacketReceiptAbsence(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -327,7 +327,7 @@ func (k Keeper) VerifyPacketReceiptAbsence(
 // VerifyNextSequenceRecv verifies a proof of the next sequence number to be
 // received of the specified channel at the specified port.
 func (k Keeper) VerifyNextSequenceRecv(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -368,7 +368,7 @@ func (k Keeper) VerifyNextSequenceRecv(
 
 // VerifyChannelUpgradeError verifies a proof of the provided upgrade error receipt.
 func (k Keeper) VerifyChannelUpgradeError(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	height exported.Height,
 	proof []byte,
@@ -410,7 +410,7 @@ func (k Keeper) VerifyChannelUpgradeError(
 
 // VerifyChannelUpgrade verifies the proof that a particular proposed upgrade has been stored in the upgrade path.
 func (k Keeper) VerifyChannelUpgrade(
-	ctx sdk.Context,
+	ctx context.Context,
 	connection exported.ConnectionI,
 	proofHeight exported.Height,
 	upgradeProof []byte,
@@ -452,7 +452,7 @@ func (k Keeper) VerifyChannelUpgrade(
 
 // getBlockDelay calculates the block delay period from the time delay of the connection
 // and the maximum expected time per block.
-func (k Keeper) getBlockDelay(ctx sdk.Context, connection exported.ConnectionI) uint64 {
+func (k Keeper) getBlockDelay(ctx context.Context, connection exported.ConnectionI) uint64 {
 	// expectedTimePerBlock should never be zero, however if it is then return a 0 blcok delay for safety
 	// as the expectedTimePerBlock parameter was not set.
 	expectedTimePerBlock := k.GetParams(ctx).MaxExpectedTimePerBlock
@@ -467,7 +467,7 @@ func (k Keeper) getBlockDelay(ctx sdk.Context, connection exported.ConnectionI) 
 
 // getClientStateAndVerificationStore returns the client state and associated KVStore for the provided client identifier.
 // If the client type is localhost then the core IBC KVStore is returned, otherwise the client prefixed store is returned.
-func (k Keeper) getClientStateAndVerificationStore(ctx sdk.Context, clientID string) (exported.ClientState, storetypes.KVStore, error) {
+func (k Keeper) getClientStateAndVerificationStore(ctx context.Context, clientID string) (exported.ClientState, storetypes.KVStore, error) {
 	clientState, found := k.clientKeeper.GetClientState(ctx, clientID)
 	if !found {
 		return nil, nil, errorsmod.Wrap(clienttypes.ErrClientNotFound, clientID)

@@ -29,7 +29,7 @@ type CapabilityTestSuite struct {
 	testifysuite.Suite
 
 	cdc codec.Codec
-	ctx sdk.Context
+	ctx context.Context
 
 	keeper *keeper.Keeper
 
@@ -50,7 +50,7 @@ func (suite *CapabilityTestSuite) SetupTest() {
 	suite.keeper = keeper.NewKeeper(suite.cdc, suite.storeKey, suite.memStoreKey)
 }
 
-func (suite *CapabilityTestSuite) NewTestContext() sdk.Context {
+func (suite *CapabilityTestSuite) NewTestContext() context.Context {
 	db := dbm.NewMemDB()
 	cms := store.NewCommitMultiStore(db, log.NewNopLogger(), metrics.NewNoOpMetrics())
 	cms.MountStoreWithDB(suite.storeKey, storetypes.StoreTypeIAVL, db)

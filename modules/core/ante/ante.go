@@ -26,7 +26,7 @@ func NewRedundantRelayDecorator(k *keeper.Keeper) RedundantRelayDecorator {
 // contains some other message type, then the antedecorator returns no error and continues processing to ensure these transactions
 // are included. This will ensure that relayers do not waste fees on multiMsg transactions when another relayer has already submitted
 // all packets, by rejecting the tx at the mempool layer.
-func (rrd RedundantRelayDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (sdk.Context, error) {
+func (rrd RedundantRelayDecorator) AnteHandle(ctx context.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (context.Context, error) {
 	// do not run redundancy check on DeliverTx or simulate
 	if (ctx.IsCheckTx() || ctx.IsReCheckTx()) && !simulate {
 		// keep track of total packet messages and number of redundancies across `RecvPacket`, `AcknowledgePacket`, and `TimeoutPacket/OnClose`
@@ -110,7 +110,7 @@ func (rrd RedundantRelayDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 // updateClientCheckTx runs a subset of ibc client update logic to be used specifically within the RedundantRelayDecorator AnteHandler.
 // The following function performs ibc client message verification for CheckTx only and state updates in both CheckTx and ReCheckTx.
 // Note that misbehaviour checks are omitted.
-func (rrd RedundantRelayDecorator) updateClientCheckTx(ctx sdk.Context, msg *clienttypes.MsgUpdateClient) error {
+func (rrd RedundantRelayDecorator) updateClientCheckTx(ctx context.Context, msg *clienttypes.MsgUpdateClient) error {
 	clientMsg, err := clienttypes.UnpackClientMessage(msg.ClientMessage)
 	if err != nil {
 		return err
@@ -149,7 +149,7 @@ func (rrd RedundantRelayDecorator) updateClientCheckTx(ctx sdk.Context, msg *cli
 
 // recvPacketCheckTx runs a subset of ibc recv packet logic to be used specifically within the RedundantRelayDecorator AnteHandler.
 // It only performs core IBC receiving logic and skips any application logic.
-func (rrd RedundantRelayDecorator) recvPacketCheckTx(ctx sdk.Context, msg *channeltypes.MsgRecvPacket) (*channeltypes.MsgRecvPacketResponse, error) {
+func (rrd RedundantRelayDecorator) recvPacketCheckTx(ctx context.Context, msg *channeltypes.MsgRecvPacket) (*channeltypes.MsgRecvPacketResponse, error) {
 	// grab channel capability
 	_, capability, err := rrd.k.ChannelKeeper.LookupModuleByChannel(ctx, msg.Packet.DestinationPort, msg.Packet.DestinationChannel)
 	if err != nil {
@@ -175,7 +175,7 @@ func (rrd RedundantRelayDecorator) recvPacketCheckTx(ctx sdk.Context, msg *chann
 
 // recvPacketReCheckTx runs a subset of ibc recv packet logic to be used specifically within the RedundantRelayDecorator AnteHandler.
 // It only performs core IBC receiving logic and skips any application logic.
-func (rrd RedundantRelayDecorator) recvPacketReCheckTx(ctx sdk.Context, msg *channeltypes.MsgRecvPacket) (*channeltypes.MsgRecvPacketResponse, error) {
+func (rrd RedundantRelayDecorator) recvPacketReCheckTx(ctx context.Context, msg *channeltypes.MsgRecvPacket) (*channeltypes.MsgRecvPacketResponse, error) {
 	// If the packet was already received, perform a no-op
 	// Use a cached context to prevent accidental state changes
 	cacheCtx, writeFn := ctx.CacheContext()

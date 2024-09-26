@@ -132,7 +132,7 @@ func (a TransferAuthorization) ValidateBasic() error {
 
 // isAllowedAddress returns a boolean indicating if the receiver address is valid for transfer.
 // gasCostPerIteration gas is consumed for each iteration.
-func isAllowedAddress(ctx sdk.Context, receiver string, allowedAddrs []string) bool {
+func isAllowedAddress(ctx context.Context, receiver string, allowedAddrs []string) bool {
 	if len(allowedAddrs) == 0 {
 		return true
 	}
@@ -149,7 +149,7 @@ func isAllowedAddress(ctx sdk.Context, receiver string, allowedAddrs []string) b
 }
 
 // validateMemo returns a nil error indicating if the memo is valid for transfer.
-func validateMemo(ctx sdk.Context, memo string, allowedMemos []string) error {
+func validateMemo(ctx context.Context, memo string, allowedMemos []string) error {
 	// if the allow list is empty, then the memo must be an empty string
 	if len(allowedMemos) == 0 {
 		if len(strings.TrimSpace(memo)) != 0 {

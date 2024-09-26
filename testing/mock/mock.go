@@ -64,8 +64,8 @@ var (
 // Expected Interface
 // PortKeeper defines the expected IBC port keeper
 type PortKeeper interface {
-	BindPort(ctx sdk.Context, portID string) *capabilitytypes.Capability
-	IsBound(ctx sdk.Context, portID string) bool
+	BindPort(ctx context.Context, portID string) *capabilitytypes.Capability
+	IsBound(ctx context.Context, portID string) bool
 }
 
 // AppModuleBasic is the mock AppModuleBasic.
@@ -132,7 +132,7 @@ func (AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {}
 func (AppModule) RegisterServices(module.Configurator) {}
 
 // InitGenesis implements the AppModule interface.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
 	for _, ibcApp := range am.ibcApps {
 		if ibcApp.PortID != "" && !am.portKeeper.IsBound(ctx, ibcApp.PortID) {
 			// bind mock portID
@@ -148,7 +148,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 }
 
 // ExportGenesis implements the AppModule interface.
-func (AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+func (AppModule) ExportGenesis(ctx context.Context, cdc codec.JSONCodec) json.RawMessage {
 	return nil
 }
 

@@ -45,7 +45,7 @@ type TendermintTestSuite struct {
 	chainB *ibctesting.TestChain
 
 	// TODO: deprecate usage in favor of testing package
-	ctx        sdk.Context
+	ctx        context.Context
 	cdc        codec.Codec
 	privVal    tmtypes.PrivValidator
 	valSet     *tmtypes.ValidatorSet

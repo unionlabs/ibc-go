@@ -18,7 +18,7 @@ import (
 // NOTE: Msg validation verifies the supplied identifiers and ensures that the counterparty
 // connection identifier is empty.
 func (k Keeper) ConnOpenInit(
-	ctx sdk.Context,
+	ctx context.Context,
 	clientID string,
 	counterparty types.Counterparty, // counterpartyPrefix, counterpartyClientIdentifier
 	version *types.Version,
@@ -67,7 +67,7 @@ func (k Keeper) ConnOpenInit(
 //   - Here chain A acts as the counterparty
 //   - Identifiers are checked on msg validation
 func (k Keeper) ConnOpenTry(
-	ctx sdk.Context,
+	ctx context.Context,
 	counterparty types.Counterparty, // counterpartyConnectionIdentifier, counterpartyPrefix and counterpartyClientIdentifier
 	delayPeriod uint64,
 	clientID string, // clientID of chainA
@@ -128,7 +128,7 @@ func (k Keeper) ConnOpenTry(
 //
 // NOTE: Identifiers are checked on msg validation.
 func (k Keeper) ConnOpenAck(
-	ctx sdk.Context,
+	ctx context.Context,
 	connectionID string,
 	_ exported.ClientState, // client state for chainA on chainB
 	version *types.Version, // version that ChainB chose in ConnOpenTry
@@ -193,7 +193,7 @@ func (k Keeper) ConnOpenAck(
 //
 // NOTE: Identifiers are checked on msg validation.
 func (k Keeper) ConnOpenConfirm(
-	ctx sdk.Context,
+	ctx context.Context,
 	connectionID string,
 	ackProof []byte, // proof that connection opened on ChainA during ConnOpenAck
 	proofHeight exported.Height, // height that relayer constructed proofAck

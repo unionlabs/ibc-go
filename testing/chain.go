@@ -10,7 +10,6 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "cosmossdk.io/x/bank/types"
 	"cosmossdk.io/x/staking/testutil"
 	stakingtypes "cosmossdk.io/x/staking/types"
@@ -19,6 +18,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmtproto "github.com/cometbft/cometbft/api/cometbft/types/v1"

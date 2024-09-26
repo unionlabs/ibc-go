@@ -152,7 +152,7 @@ func (s *CallbacksTypesTestSuite) TestEvents() {
 		s.Run(tc.name, func() {
 			expEvents = constEvents()
 			tc.malleate()
-			newCtx := sdk.Context{}.WithEventManager(sdk.NewEventManager())
+			newCtx := context.Context{}.WithEventManager(sdk.NewEventManager())
 
 			switch tc.callbackType {
 			case types.CallbackTypeReceivePacket:

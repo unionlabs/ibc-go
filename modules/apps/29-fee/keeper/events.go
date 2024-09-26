@@ -11,7 +11,7 @@ import (
 
 // emitIncentivizedPacketEvent emits an event containing information on the total amount of fees incentivizing
 // a specific packet. It should be emitted on every fee escrowed for the given packetID.
-func emitIncentivizedPacketEvent(ctx sdk.Context, packetID channeltypes.PacketId, packetFees types.PacketFees) {
+func emitIncentivizedPacketEvent(ctx context.Context, packetID channeltypes.PacketId, packetFees types.PacketFees) {
 	var (
 		totalRecvFees    sdk.Coins
 		totalAckFees     sdk.Coins
@@ -45,7 +45,7 @@ func emitIncentivizedPacketEvent(ctx sdk.Context, packetID channeltypes.PacketId
 }
 
 // emitRegisterPayeeEvent emits an event containing information of a registered payee for a relayer on a particular channel
-func emitRegisterPayeeEvent(ctx sdk.Context, relayer, payee, channelID string) {
+func emitRegisterPayeeEvent(ctx context.Context, relayer, payee, channelID string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeRegisterPayee,
@@ -61,7 +61,7 @@ func emitRegisterPayeeEvent(ctx sdk.Context, relayer, payee, channelID string) {
 }
 
 // emitRegisterCounterpartyPayeeEvent emits an event containing information of a registered counterparty payee for a relayer on a particular channel
-func emitRegisterCounterpartyPayeeEvent(ctx sdk.Context, relayer, counterpartyPayee, channelID string) {
+func emitRegisterCounterpartyPayeeEvent(ctx context.Context, relayer, counterpartyPayee, channelID string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeRegisterCounterpartyPayee,
@@ -77,7 +77,7 @@ func emitRegisterCounterpartyPayeeEvent(ctx sdk.Context, relayer, counterpartyPa
 }
 
 // emitDistributeFeeEvent emits an event containing a distribution fee and receiver address
-func emitDistributeFeeEvent(ctx sdk.Context, receiver string, fee sdk.Coins) {
+func emitDistributeFeeEvent(ctx context.Context, receiver string, fee sdk.Coins) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeDistributeFee,

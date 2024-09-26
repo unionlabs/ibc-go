@@ -25,7 +25,7 @@ var (
 type KeeperTestSuite struct {
 	testifysuite.Suite
 
-	ctx    sdk.Context
+	ctx    context.Context
 	keeper *keeper.Keeper
 }
 

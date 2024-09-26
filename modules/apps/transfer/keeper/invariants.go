@@ -16,7 +16,7 @@ func RegisterInvariants(ir sdk.InvariantRegistry, k *Keeper) {
 
 // AllInvariants runs all invariants of the transfer module.
 func AllInvariants(k *Keeper) sdk.Invariant {
-	return func(ctx sdk.Context) (string, bool) {
+	return func(ctx context.Context) (string, bool) {
 		return TotalEscrowPerDenomInvariants(k)(ctx)
 	}
 }
@@ -24,7 +24,7 @@ func AllInvariants(k *Keeper) sdk.Invariant {
 // TotalEscrowPerDenomInvariants checks that the total amount escrowed for
 // each denom is not smaller than the amount stored in the state entry.
 func TotalEscrowPerDenomInvariants(k *Keeper) sdk.Invariant {
-	return func(ctx sdk.Context) (string, bool) {
+	return func(ctx context.Context) (string, bool) {
 		var actualTotalEscrowed sdk.Coins
 
 		expectedTotalEscrowed := k.GetAllTotalEscrowed(ctx)

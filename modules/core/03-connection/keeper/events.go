@@ -7,7 +7,7 @@ import (
 )
 
 // emitConnectionOpenInitEvent emits a connection open init event
-func emitConnectionOpenInitEvent(ctx sdk.Context, connectionID string, clientID string, counterparty types.Counterparty) {
+func emitConnectionOpenInitEvent(ctx context.Context, connectionID string, clientID string, counterparty types.Counterparty) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeConnectionOpenInit,
@@ -23,7 +23,7 @@ func emitConnectionOpenInitEvent(ctx sdk.Context, connectionID string, clientID 
 }
 
 // emitConnectionOpenTryEvent emits a connection open try event
-func emitConnectionOpenTryEvent(ctx sdk.Context, connectionID string, clientID string, counterparty types.Counterparty) {
+func emitConnectionOpenTryEvent(ctx context.Context, connectionID string, clientID string, counterparty types.Counterparty) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeConnectionOpenTry,
@@ -40,7 +40,7 @@ func emitConnectionOpenTryEvent(ctx sdk.Context, connectionID string, clientID s
 }
 
 // emitConnectionOpenAckEvent emits a connection open acknowledge event
-func emitConnectionOpenAckEvent(ctx sdk.Context, connectionID string, connectionEnd types.ConnectionEnd) {
+func emitConnectionOpenAckEvent(ctx context.Context, connectionID string, connectionEnd types.ConnectionEnd) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeConnectionOpenAck,
@@ -57,7 +57,7 @@ func emitConnectionOpenAckEvent(ctx sdk.Context, connectionID string, connection
 }
 
 // emitConnectionOpenConfirmEvent emits a connection open confirm event
-func emitConnectionOpenConfirmEvent(ctx sdk.Context, connectionID string, connectionEnd types.ConnectionEnd) {
+func emitConnectionOpenConfirmEvent(ctx context.Context, connectionID string, connectionEnd types.ConnectionEnd) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeConnectionOpenConfirm,

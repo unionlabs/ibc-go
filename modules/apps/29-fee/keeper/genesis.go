@@ -7,7 +7,7 @@ import (
 )
 
 // InitGenesis initializes the fee middleware application state from a provided genesis state
-func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
+func (k Keeper) InitGenesis(ctx context.Context, state types.GenesisState) {
 	for _, identifiedFees := range state.IdentifiedFees {
 		k.SetFeesInEscrow(ctx, identifiedFees.PacketId, types.NewPacketFees(identifiedFees.PacketFees))
 	}
@@ -30,7 +30,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, state types.GenesisState) {
 }
 
 // ExportGenesis returns the fee middleware application exported genesis
-func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
+func (k Keeper) ExportGenesis(ctx context.Context) *types.GenesisState {
 	return &types.GenesisState{
 		IdentifiedFees:               k.GetAllIdentifiedPacketFees(ctx),
 		FeeEnabledChannels:           k.GetAllFeeEnabledChannels(ctx),

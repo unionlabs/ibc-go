@@ -10,11 +10,11 @@ import (
 var _ clienttypes.ConsensusHost = (*ConsensusHost)(nil)
 
 type ConsensusHost struct {
-	GetSelfConsensusStateFn func(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error)
-	ValidateSelfClientFn    func(ctx sdk.Context, clientState exported.ClientState) error
+	GetSelfConsensusStateFn func(ctx context.Context, height exported.Height) (exported.ConsensusState, error)
+	ValidateSelfClientFn    func(ctx context.Context, clientState exported.ClientState) error
 }
 
-func (cv *ConsensusHost) GetSelfConsensusState(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error) {
+func (cv *ConsensusHost) GetSelfConsensusState(ctx context.Context, height exported.Height) (exported.ConsensusState, error) {
 	if cv.GetSelfConsensusStateFn == nil {
 		return nil, nil
 	}
@@ -22,7 +22,7 @@ func (cv *ConsensusHost) GetSelfConsensusState(ctx sdk.Context, height exported.
 	return cv.GetSelfConsensusStateFn(ctx, height)
 }
 
-func (cv *ConsensusHost) ValidateSelfClient(ctx sdk.Context, clientState exported.ClientState) error {
+func (cv *ConsensusHost) ValidateSelfClient(ctx context.Context, clientState exported.ClientState) error {
 	if cv.ValidateSelfClientFn == nil {
 		return nil
 	}

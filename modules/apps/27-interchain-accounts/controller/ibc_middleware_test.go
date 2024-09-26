@@ -1,6 +1,7 @@
 package controller_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -131,7 +132,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenInit() {
 		},
 		{
 			"ICA auth module does not claim channel capability", func() {
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx sdk.Context, order channeltypes.Order, connectionHops []string,
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx context.Context, order channeltypes.Order, connectionHops []string,
 					portID, channelID string, chanCap *capabilitytypes.Capability,
 					counterparty channeltypes.Counterparty, version string,
 				) (string, error) {
@@ -147,7 +148,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenInit() {
 			"ICA auth module modification of channel version is ignored", func() {
 				// NOTE: explicitly modify the channel version via the auth module callback,
 				// ensuring the expected JSON encoded metadata is not modified upon return
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx sdk.Context, order channeltypes.Order, connectionHops []string,
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx context.Context, order channeltypes.Order, connectionHops []string,
 					portID, channelID string, chanCap *capabilitytypes.Capability,
 					counterparty channeltypes.Counterparty, version string,
 				) (string, error) {
@@ -162,7 +163,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenInit() {
 		},
 		{
 			"ICA auth module callback fails", func() {
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx sdk.Context, order channeltypes.Order, connectionHops []string,
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx context.Context, order channeltypes.Order, connectionHops []string,
 					portID, channelID string, chanCap *capabilitytypes.Capability,
 					counterparty channeltypes.Counterparty, version string,
 				) (string, error) {
@@ -179,7 +180,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenInit() {
 			"middleware disabled", func() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
 
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx sdk.Context, order channeltypes.Order, connectionHops []string,
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenInit = func(ctx context.Context, order channeltypes.Order, connectionHops []string,
 					portID, channelID string, chanCap *capabilitytypes.Capability,
 					counterparty channeltypes.Counterparty, version string,
 				) (string, error) {
@@ -331,7 +332,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenAck() {
 		{
 			"ICA auth module callback fails", func() {
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenAck = func(
-					ctx sdk.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string,
+					ctx context.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string,
 				) error {
 					return fmt.Errorf("mock ica auth fails")
 				}
@@ -347,7 +348,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenAck() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
 
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenAck = func(
-					ctx sdk.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string,
+					ctx context.Context, portID, channelID string, counterpartyChannelID string, counterpartyVersion string,
 				) error {
 					return fmt.Errorf("error should be unreachable")
 				}
@@ -594,7 +595,7 @@ func (suite *InterchainAccountsTestSuite) TestOnAcknowledgementPacket() {
 		{
 			"ICA auth module callback fails", func() {
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnAcknowledgementPacket = func(
-					ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress,
+					ctx context.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress,
 				) error {
 					return fmt.Errorf("mock ica auth fails")
 				}
@@ -610,7 +611,7 @@ func (suite *InterchainAccountsTestSuite) TestOnAcknowledgementPacket() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
 
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnAcknowledgementPacket = func(
-					ctx sdk.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress,
+					ctx context.Context, packet channeltypes.Packet, acknowledgement []byte, relayer sdk.AccAddress,
 				) error {
 					return fmt.Errorf("error should be unreachable")
 				}
@@ -689,7 +690,7 @@ func (suite *InterchainAccountsTestSuite) TestOnTimeoutPacket() {
 		{
 			"ICA auth module callback fails", func() {
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnTimeoutPacket = func(
-					ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
+					ctx context.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
 				) error {
 					return fmt.Errorf("mock ica auth fails")
 				}
@@ -705,7 +706,7 @@ func (suite *InterchainAccountsTestSuite) TestOnTimeoutPacket() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
 
 				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnTimeoutPacket = func(
-					ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
+					ctx context.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
 				) error {
 					return fmt.Errorf("error should be unreachable")
 				}
@@ -800,7 +801,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeInit() {
 		},
 		{
 			"ICA auth module callback fails", func() {
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeInit = func(ctx sdk.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, version string) (string, error) {
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeInit = func(ctx context.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, version string) (string, error) {
 					return "", ibcmock.MockApplicationCallbackError
 				}
 			}, ibcmock.MockApplicationCallbackError,
@@ -808,7 +809,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeInit() {
 		{
 			"middleware disabled", func() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeInit = func(ctx sdk.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, version string) (string, error) {
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeInit = func(ctx context.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, version string) (string, error) {
 					return "", ibcmock.MockApplicationCallbackError
 				}
 			}, nil,
@@ -927,7 +928,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeAck() {
 		},
 		{
 			"ICA auth module callback fails", func() {
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx sdk.Context, portID, channelID string, counterpartyVersion string) error {
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx context.Context, portID, channelID string, counterpartyVersion string) error {
 					return ibcmock.MockApplicationCallbackError
 				}
 			}, ibcmock.MockApplicationCallbackError,
@@ -935,7 +936,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeAck() {
 		{
 			"middleware disabled", func() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx sdk.Context, portID, channelID string, counterpartyVersion string) error {
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx context.Context, portID, channelID string, counterpartyVersion string) error {
 					return ibcmock.MockApplicationCallbackError
 				}
 			}, nil,
@@ -1016,7 +1017,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeOpen() {
 		{
 			"middleware disabled", func() {
 				suite.chainA.GetSimApp().ICAControllerKeeper.DeleteMiddlewareEnabled(suite.chainA.GetContext(), path.EndpointA.ChannelConfig.PortID, path.EndpointA.ConnectionID)
-				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx sdk.Context, portID, channelID string, counterpartyVersion string) error {
+				suite.chainA.GetSimApp().ICAAuthModule.IBCApp.OnChanUpgradeAck = func(ctx context.Context, portID, channelID string, counterpartyVersion string) error {
 					return ibcmock.MockApplicationCallbackError
 				}
 			},

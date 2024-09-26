@@ -312,7 +312,7 @@ func GetExpectedEvent(
 		return abci.Event{}, false
 	}
 
-	newCtx := sdk.Context{}.WithEventManager(sdk.NewEventManager())
+	newCtx := context.Context{}.WithEventManager(sdk.NewEventManager())
 	types.EmitCallbackEvent(newCtx, eventPortID, eventChannelID, seq, callbackType, callbackData, expError)
 	return newCtx.EventManager().Events().ToABCIEvents()[0], true
 }

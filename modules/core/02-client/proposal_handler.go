@@ -16,7 +16,7 @@ import (
 // Deprecated: This function is deprecated and will be removed in a future release.
 // Please use MsgRecoverClient and MsgIBCSoftwareUpgrade in favour of this legacy Handler.
 func NewClientProposalHandler(k keeper.Keeper) govtypes.Handler { //nolint:staticcheck
-	return func(ctx sdk.Context, content govtypes.Content) error {
+	return func(ctx context.Context, content govtypes.Content) error {
 		switch c := content.(type) {
 		case *types.ClientUpdateProposal:
 			// NOTE: RecoverClient is called in favour of the deprecated ClientUpdateProposal function.

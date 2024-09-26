@@ -54,7 +54,7 @@ type KeeperTestSuite struct {
 	chainB *ibctesting.TestChain
 
 	cdc            codec.Codec
-	ctx            sdk.Context
+	ctx            context.Context
 	keeper         *keeper.Keeper
 	consensusState *ibctm.ConsensusState
 	valSet         *tmtypes.ValidatorSet

@@ -6,21 +6,22 @@ import (
 	"strings"
 
 	"cosmossdk.io/log"
-	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"
 	storetypes "cosmossdk.io/store/types"
+	banktypes "cosmossdk.io/x/bank/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banktypes "cosmossdk.io/x/bank/types"
 
-	tmbytes "github.com/cometbft/cometbft/libs/bytes"
+	cmtbytes "github.com/cometbft/cometbft/libs/bytes"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	"github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
+	coretypes "github.com/cosmos/ibc-go/v8/modules/core/types"
 )
 
 // Keeper defines the IBC fungible transfer keeper
@@ -90,37 +91,37 @@ func (k Keeper) GetAuthority() string {
 }
 
 // Logger returns a module-specific logger.
-func (Keeper) Logger(ctx sdk.Context) log.Logger {
+func (Keeper) Logger(ctx context.Context) log.Logger {
 	return ctx.Logger().With("module", "x/"+exported.ModuleName+"-"+types.ModuleName)
 }
 
 // hasCapability checks if the transfer module owns the port capability for the desired port
-func (k Keeper) hasCapability(ctx sdk.Context, portID string) bool {
+func (k Keeper) hasCapability(ctx context.Context, portID string) bool {
 	_, ok := k.scopedKeeper.GetCapability(ctx, host.PortPath(portID))
 	return ok
 }
 
 // BindPort defines a wrapper function for the ort Keeper's function in
 // order to expose it to module's InitGenesis function
-func (k Keeper) BindPort(ctx sdk.Context, portID string) error {
+func (k Keeper) BindPort(ctx context.Context, portID string) error {
 	capability := k.portKeeper.BindPort(ctx, portID)
 	return k.ClaimCapability(ctx, capability, host.PortPath(portID))
 }
 
 // GetPort returns the portID for the transfer module. Used in ExportGenesis
-func (k Keeper) GetPort(ctx sdk.Context) string {
+func (k Keeper) GetPort(ctx context.Context) string {
 	store := ctx.KVStore(k.storeKey)
 	return string(store.Get(types.PortKey))
 }
 
 // SetPort sets the portID for the transfer module. Used in InitGenesis
-func (k Keeper) SetPort(ctx sdk.Context, portID string) {
+func (k Keeper) SetPort(ctx context.Context, portID string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.PortKey, []byte(portID))
 }
 
 // GetParams returns the current transfer module parameters.
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+func (k Keeper) GetParams(ctx context.Context) types.Params {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get([]byte(types.ParamsKey))
 	if bz == nil { // only panic on unset params and not on empty params
@@ -133,14 +134,14 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 }
 
 // SetParams sets the transfer module parameters.
-func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
+func (k Keeper) SetParams(ctx context.Context, params types.Params) {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.cdc.MustMarshal(&params)
 	store.Set([]byte(types.ParamsKey), bz)
 }
 
 // GetDenomTrace retreives the full identifiers trace and base denomination from the store.
-func (k Keeper) GetDenomTrace(ctx sdk.Context, denomTraceHash tmbytes.HexBytes) (types.DenomTrace, bool) {
+func (k Keeper) GetDenomTrace(ctx context.Context, denomTraceHash cmtbytes.HexBytes) (types.DenomTrace, bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
 	bz := store.Get(denomTraceHash)
 	if len(bz) == 0 {
@@ -152,20 +153,20 @@ func (k Keeper) GetDenomTrace(ctx sdk.Context, denomTraceHash tmbytes.HexBytes) 
 }
 
 // HasDenomTrace checks if a the key with the given denomination trace hash exists on the store.
-func (k Keeper) HasDenomTrace(ctx sdk.Context, denomTraceHash tmbytes.HexBytes) bool {
+func (k Keeper) HasDenomTrace(ctx context.Context, denomTraceHash cmtbytes.HexBytes) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
 	return store.Has(denomTraceHash)
 }
 
 // SetDenomTrace sets a new {trace hash -> denom trace} pair to the store.
-func (k Keeper) SetDenomTrace(ctx sdk.Context, denomTrace types.DenomTrace) {
+func (k Keeper) SetDenomTrace(ctx context.Context, denomTrace types.DenomTrace) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
 	bz := k.MustMarshalDenomTrace(denomTrace)
 	store.Set(denomTrace.Hash(), bz)
 }
 
 // GetAllDenomTraces returns the trace information for all the denominations.
-func (k Keeper) GetAllDenomTraces(ctx sdk.Context) types.Traces {
+func (k Keeper) GetAllDenomTraces(ctx context.Context) types.Traces {
 	traces := types.Traces{}
 	k.IterateDenomTraces(ctx, func(denomTrace types.DenomTrace) bool {
 		traces = append(traces, denomTrace)
@@ -177,11 +178,11 @@ func (k Keeper) GetAllDenomTraces(ctx sdk.Context) types.Traces {
 
 // IterateDenomTraces iterates over the denomination traces in the store
 // and performs a callback function.
-func (k Keeper) IterateDenomTraces(ctx sdk.Context, cb func(denomTrace types.DenomTrace) bool) {
+func (k Keeper) IterateDenomTraces(ctx context.Context, cb func(denomTrace types.DenomTrace) bool) {
 	store := ctx.KVStore(k.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, types.DenomTraceKey)
 
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 	for ; iterator.Valid(); iterator.Next() {
 		denomTrace := k.MustUnmarshalDenomTrace(iterator.Value())
 		if cb(denomTrace) {
@@ -191,7 +192,7 @@ func (k Keeper) IterateDenomTraces(ctx sdk.Context, cb func(denomTrace types.Den
 }
 
 // setDenomMetadata sets an IBC token's denomination metadata
-func (k Keeper) setDenomMetadata(ctx sdk.Context, denomTrace types.DenomTrace) {
+func (k Keeper) setDenomMetadata(ctx context.Context, denomTrace types.DenomTrace) {
 	metadata := banktypes.Metadata{
 		Description: fmt.Sprintf("IBC token from %s", denomTrace.GetFullDenomPath()),
 		DenomUnits: []*banktypes.DenomUnit{
@@ -217,23 +218,25 @@ func (k Keeper) setDenomMetadata(ctx sdk.Context, denomTrace types.DenomTrace) {
 //
 // NOTE: if there is no value stored in state for the provided denom then a new Coin is returned for the denom with an initial value of zero.
 // This accommodates callers to simply call `Add()` on the returned Coin as an empty Coin literal (e.g. sdk.Coin{}) will trigger a panic due to the absence of a denom.
-func (k Keeper) GetTotalEscrowForDenom(ctx sdk.Context, denom string) sdk.Coin {
+func (k Keeper) GetTotalEscrowForDenom(ctx context.Context, denom string) sdk.Coin {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.TotalEscrowForDenomKey(denom))
 	if len(bz) == 0 {
-		return sdk.NewCoin(denom, sdkmath.ZeroInt())
+		return sdk.NewCoin(denom, math.ZeroInt())
 	}
 
-	amount := sdk.IntProto{}
-	k.cdc.MustUnmarshal(bz, &amount)
+	amount := math.Int{}
+	if err := amount.Unmarshal(bz); err != nil {
+		panic(err)
+	}
 
-	return sdk.NewCoin(denom, amount.Int)
+	return sdk.NewCoin(denom, amount)
 }
 
 // SetTotalEscrowForDenom stores the total amount of source chain tokens that are in escrow.
 // Amount is stored in state if and only if it is not equal to zero. The function will panic
 // if the amount is negative.
-func (k Keeper) SetTotalEscrowForDenom(ctx sdk.Context, coin sdk.Coin) {
+func (k Keeper) SetTotalEscrowForDenom(ctx context.Context, coin sdk.Coin) {
 	if coin.Amount.IsNegative() {
 		panic(fmt.Errorf("amount cannot be negative: %s", coin.Amount))
 	}
@@ -246,12 +249,15 @@ func (k Keeper) SetTotalEscrowForDenom(ctx sdk.Context, coin sdk.Coin) {
 		return
 	}
 
-	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: coin.Amount})
+	bz, err := coin.Amount.Marshal()
+	if err != nil {
+		panic(err)
+	}
 	store.Set(key, bz)
 }
 
 // GetAllTotalEscrowed returns the escrow information for all the denominations.
-func (k Keeper) GetAllTotalEscrowed(ctx sdk.Context) sdk.Coins {
+func (k Keeper) GetAllTotalEscrowed(ctx context.Context) sdk.Coins {
 	var escrows sdk.Coins
 	k.IterateTokensInEscrow(ctx, []byte(types.KeyTotalEscrowPrefix), func(denomEscrow sdk.Coin) bool {
 		escrows = escrows.Add(denomEscrow)
@@ -264,23 +270,23 @@ func (k Keeper) GetAllTotalEscrowed(ctx sdk.Context) sdk.Coins {
 // IterateTokensInEscrow iterates over the denomination escrows in the store
 // and performs a callback function. Denominations for which an invalid value
 // (i.e. not integer) is stored, will be skipped.
-func (k Keeper) IterateTokensInEscrow(ctx sdk.Context, storeprefix []byte, cb func(denomEscrow sdk.Coin) bool) {
+func (k Keeper) IterateTokensInEscrow(ctx context.Context, storeprefix []byte, cb func(denomEscrow sdk.Coin) bool) {
 	store := ctx.KVStore(k.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, storeprefix)
 
-	defer sdk.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
 	for ; iterator.Valid(); iterator.Next() {
 		denom := strings.TrimPrefix(string(iterator.Key()), fmt.Sprintf("%s/", types.KeyTotalEscrowPrefix))
 		if strings.TrimSpace(denom) == "" {
 			continue // denom is empty
 		}
 
-		amount := sdk.IntProto{}
-		if err := k.cdc.Unmarshal(iterator.Value(), &amount); err != nil {
+		amount := math.Int{}
+		if err := amount.Unmarshal(iterator.Value()); err != nil {
 			continue // total escrow amount cannot be unmarshalled to integer
 		}
 
-		denomEscrow := sdk.NewCoin(denom, amount.Int)
+		denomEscrow := sdk.NewCoin(denom, amount)
 		if cb(denomEscrow) {
 			break
 		}
@@ -288,12 +294,12 @@ func (k Keeper) IterateTokensInEscrow(ctx sdk.Context, storeprefix []byte, cb fu
 }
 
 // AuthenticateCapability wraps the scopedKeeper's AuthenticateCapability function
-func (k Keeper) AuthenticateCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) bool {
+func (k Keeper) AuthenticateCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) bool {
 	return k.scopedKeeper.AuthenticateCapability(ctx, cap, name)
 }
 
 // ClaimCapability allows the transfer module that can claim a capability that IBC module
 // passes to it
-func (k Keeper) ClaimCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) error {
+func (k Keeper) ClaimCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) error {
 	return k.scopedKeeper.ClaimCapability(ctx, cap, name)
 }

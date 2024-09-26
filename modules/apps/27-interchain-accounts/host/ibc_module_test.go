@@ -1,6 +1,7 @@
 package host_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -9,9 +10,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
+	banktypes "cosmossdk.io/x/bank/types"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banktypes "cosmossdk.io/x/bank/types"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	icahost "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host"
@@ -167,7 +168,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenTry() {
 		{
 			"success: ICA auth module callback returns error", func() {
 				// mock module callback should not be called on host side
-				suite.chainB.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenTry = func(ctx sdk.Context, order channeltypes.Order, connectionHops []string,
+				suite.chainB.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenTry = func(ctx context.Context, order channeltypes.Order, connectionHops []string,
 					portID, channelID string, chanCap *capabilitytypes.Capability,
 					counterparty channeltypes.Counterparty, counterpartyVersion string,
 				) (string, error) {
@@ -285,7 +286,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanOpenConfirm() {
 			"success: ICA auth module callback returns error", func() {
 				// mock module callback should not be called on host side
 				suite.chainB.GetSimApp().ICAAuthModule.IBCApp.OnChanOpenConfirm = func(
-					ctx sdk.Context, portID, channelID string,
+					ctx context.Context, portID, channelID string,
 				) error {
 					return fmt.Errorf("mock ica auth fails")
 				}
@@ -412,7 +413,7 @@ func (suite *InterchainAccountsTestSuite) TestOnRecvPacket() {
 		{
 			"success with ICA auth module callback failure", func() {
 				suite.chainB.GetSimApp().ICAAuthModule.IBCApp.OnRecvPacket = func(
-					ctx sdk.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
+					ctx context.Context, packet channeltypes.Packet, relayer sdk.AccAddress,
 				) exported.Acknowledgement {
 					return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed OnRecvPacket mock callback"))
 				}
@@ -724,7 +725,7 @@ func (suite *InterchainAccountsTestSuite) TestOnChanUpgradeAck() {
 	suite.Require().ErrorIs(err, icatypes.ErrInvalidChannelFlow)
 }
 
-func (suite *InterchainAccountsTestSuite) fundICAWallet(ctx sdk.Context, portID string, amount sdk.Coins) {
+func (suite *InterchainAccountsTestSuite) fundICAWallet(ctx context.Context, portID string, amount sdk.Coins) {
 	interchainAccountAddr, found := suite.chainB.GetSimApp().ICAHostKeeper.GetInterchainAccountAddress(ctx, ibctesting.FirstConnectionID, portID)
 	suite.Require().True(found)
 

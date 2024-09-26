@@ -39,7 +39,7 @@ func NewIBCMiddleware(app porttypes.IBCModule, k keeper.Keeper) IBCMiddleware {
 
 // OnChanOpenInit implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanOpenInit(
-	ctx sdk.Context,
+	ctx context.Context,
 	order channeltypes.Order,
 	connectionHops []string,
 	portID string,
@@ -93,7 +93,7 @@ func (im IBCMiddleware) OnChanOpenInit(
 // If the channel is not fee enabled the underlying application version will be returned
 // If the channel is fee enabled we merge the underlying application version with the ics29 version
 func (im IBCMiddleware) OnChanOpenTry(
-	ctx sdk.Context,
+	ctx context.Context,
 	order channeltypes.Order,
 	connectionHops []string,
 	portID,
@@ -133,7 +133,7 @@ func (im IBCMiddleware) OnChanOpenTry(
 
 // OnChanOpenAck implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanOpenAck(
-	ctx sdk.Context,
+	ctx context.Context,
 	portID,
 	channelID string,
 	counterpartyChannelID string,
@@ -162,7 +162,7 @@ func (im IBCMiddleware) OnChanOpenAck(
 
 // OnChanOpenConfirm implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanOpenConfirm(
-	ctx sdk.Context,
+	ctx context.Context,
 	portID,
 	channelID string,
 ) error {
@@ -172,7 +172,7 @@ func (im IBCMiddleware) OnChanOpenConfirm(
 
 // OnChanCloseInit implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanCloseInit(
-	ctx sdk.Context,
+	ctx context.Context,
 	portID,
 	channelID string,
 ) error {
@@ -193,7 +193,7 @@ func (im IBCMiddleware) OnChanCloseInit(
 
 // OnChanCloseConfirm implements the IBCMiddleware interface
 func (im IBCMiddleware) OnChanCloseConfirm(
-	ctx sdk.Context,
+	ctx context.Context,
 	portID,
 	channelID string,
 ) error {
@@ -215,7 +215,7 @@ func (im IBCMiddleware) OnChanCloseConfirm(
 // OnRecvPacket implements the IBCMiddleware interface.
 // If fees are not enabled, this callback will default to the ibc-core packet callback
 func (im IBCMiddleware) OnRecvPacket(
-	ctx sdk.Context,
+	ctx context.Context,
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) exported.Acknowledgement {
@@ -240,7 +240,7 @@ func (im IBCMiddleware) OnRecvPacket(
 // OnAcknowledgementPacket implements the IBCMiddleware interface
 // If fees are not enabled, this callback will default to the ibc-core packet callback
 func (im IBCMiddleware) OnAcknowledgementPacket(
-	ctx sdk.Context,
+	ctx context.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,
 	relayer sdk.AccAddress,
@@ -292,7 +292,7 @@ func (im IBCMiddleware) OnAcknowledgementPacket(
 // OnTimeoutPacket implements the IBCMiddleware interface
 // If fees are not enabled, this callback will default to the ibc-core packet callback
 func (im IBCMiddleware) OnTimeoutPacket(
-	ctx sdk.Context,
+	ctx context.Context,
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) error {
@@ -330,7 +330,7 @@ func (im IBCMiddleware) OnTimeoutPacket(
 
 // OnChanUpgradeInit implements the IBCModule interface
 func (im IBCMiddleware) OnChanUpgradeInit(
-	ctx sdk.Context,
+	ctx context.Context,
 	portID string,
 	channelID string,
 	proposedOrder channeltypes.Order,
@@ -368,7 +368,7 @@ func (im IBCMiddleware) OnChanUpgradeInit(
 }
 
 // OnChanUpgradeTry implement s the IBCModule interface
-func (im IBCMiddleware) OnChanUpgradeTry(ctx sdk.Context, portID, channelID string, proposedOrder channeltypes.Order, proposedConnectionHops []string, counterpartyVersion string) (string, error) {
+func (im IBCMiddleware) OnChanUpgradeTry(ctx context.Context, portID, channelID string, proposedOrder channeltypes.Order, proposedConnectionHops []string, counterpartyVersion string) (string, error) {
 	cbs, ok := im.app.(porttypes.UpgradableModule)
 	if !ok {
 		return "", errorsmod.Wrap(porttypes.ErrInvalidRoute, "upgrade route not found to module in application callstack")
@@ -400,7 +400,7 @@ func (im IBCMiddleware) OnChanUpgradeTry(ctx sdk.Context, portID, channelID stri
 }
 
 // OnChanUpgradeAck implements the IBCModule interface
-func (im IBCMiddleware) OnChanUpgradeAck(ctx sdk.Context, portID, channelID, counterpartyVersion string) error {
+func (im IBCMiddleware) OnChanUpgradeAck(ctx context.Context, portID, channelID, counterpartyVersion string) error {
 	cbs, ok := im.app.(porttypes.UpgradableModule)
 	if !ok {
 		return errorsmod.Wrap(porttypes.ErrInvalidRoute, "upgrade route not found to module in application callstack")
@@ -422,7 +422,7 @@ func (im IBCMiddleware) OnChanUpgradeAck(ctx sdk.Context, portID, channelID, cou
 }
 
 // OnChanUpgradeOpen implements the IBCModule interface
-func (im IBCMiddleware) OnChanUpgradeOpen(ctx sdk.Context, portID, channelID string, proposedOrder channeltypes.Order, proposedConnectionHops []string, proposedVersion string) {
+func (im IBCMiddleware) OnChanUpgradeOpen(ctx context.Context, portID, channelID string, proposedOrder channeltypes.Order, proposedConnectionHops []string, proposedVersion string) {
 	cbs, ok := im.app.(porttypes.UpgradableModule)
 	if !ok {
 		panic(errorsmod.Wrap(porttypes.ErrInvalidRoute, "upgrade route not found to module in application callstack"))
@@ -443,7 +443,7 @@ func (im IBCMiddleware) OnChanUpgradeOpen(ctx sdk.Context, portID, channelID str
 
 // SendPacket implements the ICS4 Wrapper interface
 func (im IBCMiddleware) SendPacket(
-	ctx sdk.Context,
+	ctx context.Context,
 	chanCap *capabilitytypes.Capability,
 	sourcePort string,
 	sourceChannel string,
@@ -456,7 +456,7 @@ func (im IBCMiddleware) SendPacket(
 
 // WriteAcknowledgement implements the ICS4 Wrapper interface
 func (im IBCMiddleware) WriteAcknowledgement(
-	ctx sdk.Context,
+	ctx context.Context,
 	chanCap *capabilitytypes.Capability,
 	packet exported.PacketI,
 	ack exported.Acknowledgement,
@@ -465,7 +465,7 @@ func (im IBCMiddleware) WriteAcknowledgement(
 }
 
 // GetAppVersion returns the application version of the underlying application
-func (im IBCMiddleware) GetAppVersion(ctx sdk.Context, portID, channelID string) (string, bool) {
+func (im IBCMiddleware) GetAppVersion(ctx context.Context, portID, channelID string) (string, bool) {
 	return im.keeper.GetAppVersion(ctx, portID, channelID)
 }
 

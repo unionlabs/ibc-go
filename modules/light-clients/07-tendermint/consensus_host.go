@@ -40,7 +40,7 @@ func NewConsensusHost(stakingKeeper clienttypes.StakingKeeper) clienttypes.Conse
 }
 
 // GetSelfConsensusState implements the 02-client clienttypes.ConsensusHost interface.
-func (c *ConsensusHost) GetSelfConsensusState(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error) {
+func (c *ConsensusHost) GetSelfConsensusState(ctx context.Context, height exported.Height) (exported.ConsensusState, error) {
 	selfHeight, ok := height.(clienttypes.Height)
 	if !ok {
 		return nil, errorsmod.Wrapf(ibcerrors.ErrInvalidType, "expected %T, got %T", clienttypes.Height{}, height)
@@ -67,7 +67,7 @@ func (c *ConsensusHost) GetSelfConsensusState(ctx sdk.Context, height exported.H
 }
 
 // ValidateSelfClient implements the 02-client clienttypes.ConsensusHost interface.
-func (c *ConsensusHost) ValidateSelfClient(ctx sdk.Context, clientState exported.ClientState) error {
+func (c *ConsensusHost) ValidateSelfClient(ctx context.Context, clientState exported.ClientState) error {
 	tmClient, ok := clientState.(*ClientState)
 	if !ok {
 		return errorsmod.Wrapf(clienttypes.ErrInvalidClient, "client must be a Tendermint client, expected: %T, got: %T", &ClientState{}, tmClient)

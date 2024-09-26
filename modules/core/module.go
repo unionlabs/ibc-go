@@ -139,7 +139,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	}
 
 	connectionMigrator := connectionkeeper.NewMigrator(am.keeper.ConnectionKeeper)
-	if err := cfg.RegisterMigration(exported.ModuleName, 3, func(ctx sdk.Context) error {
+	if err := cfg.RegisterMigration(exported.ModuleName, 3, func(ctx context.Context) error {
 		if err := connectionMigrator.Migrate3to4(ctx); err != nil {
 			return err
 		}
@@ -149,7 +149,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 		panic(err)
 	}
 
-	if err := cfg.RegisterMigration(exported.ModuleName, 4, func(ctx sdk.Context) error {
+	if err := cfg.RegisterMigration(exported.ModuleName, 4, func(ctx context.Context) error {
 		if err := clientMigrator.MigrateParams(ctx); err != nil {
 			return err
 		}
@@ -168,7 +168,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 // InitGenesis performs genesis initialization for the ibc module. It returns
 // no validator updates.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, bz json.RawMessage) {
+func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, bz json.RawMessage) {
 	var gs types.GenesisState
 	err := cdc.UnmarshalJSON(bz, &gs)
 	if err != nil {
@@ -179,7 +179,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, bz json.Ra
 
 // ExportGenesis returns the exported genesis state as raw bytes for the ibc
 // module.
-func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+func (am AppModule) ExportGenesis(ctx context.Context, cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(ExportGenesis(ctx, *am.keeper))
 }
 

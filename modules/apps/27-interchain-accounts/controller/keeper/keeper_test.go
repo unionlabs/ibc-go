@@ -5,8 +5,10 @@ import (
 
 	testifysuite "github.com/stretchr/testify/suite"
 
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "cosmossdk.io/x/gov/types"
+
+	"github.com/cosmos/cosmos-sdk/runtime"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/keeper"
 	"github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
@@ -117,7 +119,7 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 		{"success", func() {
 			keeper.NewKeeper(
 				suite.chainA.GetSimApp().AppCodec(),
-				suite.chainA.GetSimApp().GetKey(types.StoreKey),
+				runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(types.StoreKey)),
 				suite.chainA.GetSimApp().GetSubspace(types.SubModuleName),
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
@@ -130,7 +132,7 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 		{"failure: empty authority", func() {
 			keeper.NewKeeper(
 				suite.chainA.GetSimApp().AppCodec(),
-				suite.chainA.GetSimApp().GetKey(types.StoreKey),
+				runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(types.StoreKey)),
 				suite.chainA.GetSimApp().GetSubspace(types.SubModuleName),
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,

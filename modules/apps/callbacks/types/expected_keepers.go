@@ -23,7 +23,7 @@ type ContractKeeper interface {
 	// on all source chain callbacks (SendPacket, AcknowledgementPacket, TimeoutPacket). This
 	// defensively guards against exploits due to incorrectly wired SendPacket ordering in IBC stacks.
 	IBCSendPacketCallback(
-		cachedCtx sdk.Context,
+		cachedCtx context.Context,
 		sourcePort string,
 		sourceChannel string,
 		timeoutHeight clienttypes.Height,
@@ -44,7 +44,7 @@ type ContractKeeper interface {
 	// on all source chain callbacks (SendPacket, AcknowledgementPacket, TimeoutPacket). This
 	// defensively guards against exploits due to incorrectly wired SendPacket ordering in IBC stacks.
 	IBCOnAcknowledgementPacketCallback(
-		cachedCtx sdk.Context,
+		cachedCtx context.Context,
 		packet channeltypes.Packet,
 		acknowledgement []byte,
 		relayer sdk.AccAddress,
@@ -63,7 +63,7 @@ type ContractKeeper interface {
 	// on all source chain callbacks (SendPacket, AcknowledgementPacket, TimeoutPacket). This
 	// defensively guards against exploits due to incorrectly wired SendPacket ordering in IBC stacks.
 	IBCOnTimeoutPacketCallback(
-		cachedCtx sdk.Context,
+		cachedCtx context.Context,
 		packet channeltypes.Packet,
 		relayer sdk.AccAddress,
 		contractAddress,
@@ -75,7 +75,7 @@ type ContractKeeper interface {
 	// This entry point is called with a cached context. If an error is returned, then the changes in
 	// this context will not be persisted, but the packet lifecycle will not be blocked.
 	IBCReceivePacketCallback(
-		cachedCtx sdk.Context,
+		cachedCtx context.Context,
 		packet ibcexported.PacketI,
 		ack ibcexported.Acknowledgement,
 		contractAddress string,

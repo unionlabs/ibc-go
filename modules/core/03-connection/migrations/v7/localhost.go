@@ -6,6 +6,6 @@ import (
 
 // MigrateLocalhostConnection creates the sentinel localhost connection end to enable
 // localhost ibc functionality.
-func MigrateLocalhostConnection(ctx sdk.Context, connectionKeeper ConnectionKeeper) {
+func MigrateLocalhostConnection(ctx context.Context, connectionKeeper ConnectionKeeper) {
 	connectionKeeper.CreateSentinelLocalhostConnection(ctx)
 }

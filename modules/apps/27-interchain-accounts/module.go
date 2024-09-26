@@ -119,7 +119,7 @@ func NewAppModule(cdc codec.Codec, controllerKeeper *controllerkeeper.Keeper, ho
 
 // InitModule will initialize the interchain accounts module. It should only be
 // called once and as an alternative to InitGenesis.
-func (am AppModule) InitModule(ctx sdk.Context, controllerParams controllertypes.Params, hostParams hosttypes.Params) {
+func (am AppModule) InitModule(ctx context.Context, controllerParams controllertypes.Params, hostParams hosttypes.Params) {
 	if am.controllerKeeper != nil {
 		controllerkeeper.InitGenesis(ctx, *am.controllerKeeper, genesistypes.ControllerGenesisState{
 			Params: controllerParams,
@@ -156,7 +156,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	}
 
 	hostMigrator := hostkeeper.NewMigrator(am.hostKeeper)
-	if err := cfg.RegisterMigration(types.ModuleName, 2, func(ctx sdk.Context) error {
+	if err := cfg.RegisterMigration(types.ModuleName, 2, func(ctx context.Context) error {
 		if err := hostMigrator.MigrateParams(ctx); err != nil {
 			return err
 		}
@@ -168,7 +168,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 // InitGenesis performs genesis initialization for the interchain accounts module.
 // It returns no validator updates.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) {
+func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, data json.RawMessage) {
 	var genesisState genesistypes.GenesisState
 	cdc.MustUnmarshalJSON(data, &genesisState)
 
@@ -182,7 +182,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the interchain accounts module
-func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+func (am AppModule) ExportGenesis(ctx context.Context) (json.RawMessage, error) {
 	var (
 		controllerGenesisState = genesistypes.DefaultControllerGenesis()
 		hostGenesisState       = genesistypes.DefaultHostGenesis()
@@ -198,7 +198,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 
 	gs := genesistypes.NewGenesisState(controllerGenesisState, hostGenesisState)
 
-	return cdc.MustMarshalJSON(gs)
+	return am.cdc.MarshalJSON(gs)
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
@@ -212,8 +212,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 }
 
 // ProposalMsgs returns msgs used for governance proposals for simulations.
-func (AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
-	return simulation.ProposalMsgs()
+func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
+	return simulation.ProposalMsgs(am.controllerKeeper, am.hostKeeper)
 }
 
 // WeightedOperations is unimplemented.

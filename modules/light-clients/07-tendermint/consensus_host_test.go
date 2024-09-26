@@ -47,7 +47,7 @@ func (suite *TendermintTestSuite) TestGetSelfConsensusState() {
 			name: "custom consensus host: failure",
 			malleate: func() {
 				consensusHost := &mock.ConsensusHost{
-					GetSelfConsensusStateFn: func(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error) {
+					GetSelfConsensusStateFn: func(ctx context.Context, height exported.Height) (exported.ConsensusState, error) {
 						return nil, mock.MockApplicationCallbackError
 					},
 				}
@@ -59,7 +59,7 @@ func (suite *TendermintTestSuite) TestGetSelfConsensusState() {
 			name: "custom consensus host: success",
 			malleate: func() {
 				consensusHost := &mock.ConsensusHost{
-					GetSelfConsensusStateFn: func(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error) {
+					GetSelfConsensusStateFn: func(ctx context.Context, height exported.Height) (exported.ConsensusState, error) {
 						return &solomachine.ConsensusState{}, nil
 					},
 				}
@@ -143,7 +143,7 @@ func (suite *TendermintTestSuite) TestValidateSelfClient() {
 				clientState = solomachine.NewClientState(1, &solomachine.ConsensusState{})
 
 				smConsensusHost := &mock.ConsensusHost{
-					ValidateSelfClientFn: func(ctx sdk.Context, clientState exported.ClientState) error {
+					ValidateSelfClientFn: func(ctx context.Context, clientState exported.ClientState) error {
 						smClientState, ok := clientState.(*solomachine.ClientState)
 						suite.Require().True(ok)
 						suite.Require().Equal(uint64(1), smClientState.Sequence)

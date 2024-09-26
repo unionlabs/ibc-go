@@ -8,9 +8,9 @@ import (
 
 // ScopedKeeper defines the expected x/capability scoped keeper interface
 type ScopedKeeper interface {
-	NewCapability(ctx sdk.Context, name string) (*capabilitytypes.Capability, error)
-	GetCapability(ctx sdk.Context, name string) (*capabilitytypes.Capability, bool)
-	AuthenticateCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) bool
-	LookupModules(ctx sdk.Context, name string) ([]string, *capabilitytypes.Capability, error)
-	ClaimCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) error
+	NewCapability(ctx context.Context, name string) (*capabilitytypes.Capability, error)
+	GetCapability(ctx context.Context, name string) (*capabilitytypes.Capability, bool)
+	AuthenticateCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) bool
+	LookupModules(ctx context.Context, name string) ([]string, *capabilitytypes.Capability, error)
+	ClaimCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) error
 }

@@ -1,6 +1,8 @@
 package mock
 
 import (
+	"context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
@@ -15,7 +17,7 @@ type IBCApp struct {
 	ScopedKeeper capabilitykeeper.ScopedKeeper
 
 	OnChanOpenInit func(
-		ctx sdk.Context,
+		ctx context.Context,
 		order channeltypes.Order,
 		connectionHops []string,
 		portID string,
@@ -26,7 +28,7 @@ type IBCApp struct {
 	) (string, error)
 
 	OnChanOpenTry func(
-		ctx sdk.Context,
+		ctx context.Context,
 		order channeltypes.Order,
 		connectionHops []string,
 		portID,
@@ -37,7 +39,7 @@ type IBCApp struct {
 	) (version string, err error)
 
 	OnChanOpenAck func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID string,
 		counterpartyChannelID string,
@@ -45,19 +47,19 @@ type IBCApp struct {
 	) error
 
 	OnChanOpenConfirm func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID string,
 	) error
 
 	OnChanCloseInit func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID string,
 	) error
 
 	OnChanCloseConfirm func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID string,
 	) error
@@ -68,26 +70,26 @@ type IBCApp struct {
 	// otherwise the application state changes are discarded. In either case the packet is received
 	// and the acknowledgement is written (in synchronous cases).
 	OnRecvPacket func(
-		ctx sdk.Context,
+		ctx context.Context,
 		packet channeltypes.Packet,
 		relayer sdk.AccAddress,
 	) exported.Acknowledgement
 
 	OnAcknowledgementPacket func(
-		ctx sdk.Context,
+		ctx context.Context,
 		packet channeltypes.Packet,
 		acknowledgement []byte,
 		relayer sdk.AccAddress,
 	) error
 
 	OnTimeoutPacket func(
-		ctx sdk.Context,
+		ctx context.Context,
 		packet channeltypes.Packet,
 		relayer sdk.AccAddress,
 	) error
 
 	OnChanUpgradeInit func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID, channelID string,
 		order channeltypes.Order,
 		connectionHops []string,
@@ -95,7 +97,7 @@ type IBCApp struct {
 	) (string, error)
 
 	OnChanUpgradeTry func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID, channelID string,
 		order channeltypes.Order,
 		connectionHops []string,
@@ -103,14 +105,14 @@ type IBCApp struct {
 	) (string, error)
 
 	OnChanUpgradeAck func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID,
 		counterpartyVersion string,
 	) error
 
 	OnChanUpgradeOpen func(
-		ctx sdk.Context,
+		ctx context.Context,
 		portID,
 		channelID string,
 		order channeltypes.Order,

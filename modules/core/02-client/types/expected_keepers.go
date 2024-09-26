@@ -30,5 +30,5 @@ type UpgradeKeeper interface {
 
 // ParamSubspace defines the expected Subspace interface for module parameters.
 type ParamSubspace interface {
-	GetParamSet(ctx sdk.Context, ps paramtypes.ParamSet)
+	GetParamSet(ctx context.Context, ps paramtypes.ParamSet)
 }

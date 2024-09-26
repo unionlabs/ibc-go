@@ -816,17 +816,17 @@ func (app *SimApp) setPostHandler() {
 func (app *SimApp) Name() string { return app.BaseApp.Name() }
 
 // PreBlocker application updates every pre block
-func (app *SimApp) PreBlocker(ctx sdk.Context, _ *abci.RequestFinalizeBlock) (*sdk.ResponsePreBlock, error) {
+func (app *SimApp) PreBlocker(ctx context.Context, _ *abci.RequestFinalizeBlock) (*sdk.ResponsePreBlock, error) {
 	return app.ModuleManager.PreBlock(ctx)
 }
 
 // BeginBlocker application updates every begin block
-func (app *SimApp) BeginBlocker(ctx sdk.Context) (sdk.BeginBlock, error) {
+func (app *SimApp) BeginBlocker(ctx context.Context) (sdk.BeginBlock, error) {
 	return app.ModuleManager.BeginBlock(ctx)
 }
 
 // EndBlocker application updates every end block
-func (app *SimApp) EndBlocker(ctx sdk.Context) (sdk.EndBlock, error) {
+func (app *SimApp) EndBlocker(ctx context.Context) (sdk.EndBlock, error) {
 	return app.ModuleManager.EndBlock(ctx)
 }
 
@@ -836,7 +836,7 @@ func (app *SimApp) Configurator() module.Configurator {
 }
 
 // InitChainer application update at chain initialization
-func (app *SimApp) InitChainer(ctx sdk.Context, req *abci.RequestInitChain) (*abci.ResponseInitChain, error) {
+func (app *SimApp) InitChainer(ctx context.Context, req *abci.RequestInitChain) (*abci.ResponseInitChain, error) {
 	var genesisState GenesisState
 	if err := json.Unmarshal(req.AppStateBytes, &genesisState); err != nil {
 		panic(err)

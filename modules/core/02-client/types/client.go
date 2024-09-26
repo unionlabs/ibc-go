@@ -24,8 +24,8 @@ var (
 
 // ConsensusHost defines an interface used to validate an IBC ClientState and ConsensusState against the host chain's underlying consensus parameters.
 type ConsensusHost interface {
-	GetSelfConsensusState(ctx sdk.Context, height exported.Height) (exported.ConsensusState, error)
-	ValidateSelfClient(ctx sdk.Context, clientState exported.ClientState) error
+	GetSelfConsensusState(ctx context.Context, height exported.Height) (exported.ConsensusState, error)
+	ValidateSelfClient(ctx context.Context, clientState exported.ClientState) error
 }
 
 // NewIdentifiedClientState creates a new IdentifiedClientState instance
