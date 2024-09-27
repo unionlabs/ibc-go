@@ -1,9 +1,9 @@
 package keeper
 
 import (
-	errorsmod "cosmossdk.io/errors"
+	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	errorsmod "cosmossdk.io/errors"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 )

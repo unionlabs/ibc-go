@@ -5,6 +5,6 @@ import (
 )
 
 // MigrateLocalhostClient initialises the 09-localhost client state and sets it in state.
-func MigrateLocalhostClient(ctx context.Context, clientKeeper ClientKeeper) error {
+func MigrateLocalhostClient(ctx sdk.Context, clientKeeper ClientKeeper) error {
 	return clientKeeper.CreateLocalhostClient(ctx)
 }

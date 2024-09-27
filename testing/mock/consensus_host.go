@@ -1,7 +1,7 @@
 package mock
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"

@@ -23,7 +23,7 @@ func NewMigrator(keeper Keeper) Migrator {
 
 // Migrate1to2 migrates ibc-fee module from ConsensusVersion 1 to 2
 // by refunding leftover fees to the refund address.
-func (m Migrator) Migrate1to2(ctx context.Context) error {
+func (m Migrator) Migrate1to2(ctx sdk.Context) error {
 	store := ctx.KVStore(m.keeper.storeKey)
 	iterator := storetypes.KVStorePrefixIterator(store, []byte(types.FeesInEscrowPrefix))
 	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })

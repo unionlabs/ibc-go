@@ -1,7 +1,7 @@
 package ibc
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	client "github.com/cosmos/ibc-go/v8/modules/core/02-client"
 	connection "github.com/cosmos/ibc-go/v8/modules/core/03-connection"

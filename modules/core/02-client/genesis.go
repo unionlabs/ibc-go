@@ -1,10 +1,9 @@
 package client
 
 import (
+	"context"
 	"errors"
 	"fmt"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/keeper"
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/types"

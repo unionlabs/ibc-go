@@ -156,7 +156,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	}
 
 	hostMigrator := hostkeeper.NewMigrator(am.hostKeeper)
-	if err := cfg.RegisterMigration(types.ModuleName, 2, func(ctx context.Context) error {
+	if err := cfg.RegisterMigration(types.ModuleName, 2, func(ctx sdk.Context) error {
 		if err := hostMigrator.MigrateParams(ctx); err != nil {
 			return err
 		}

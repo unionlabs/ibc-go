@@ -2,6 +2,7 @@ package tendermint
 
 import (
 	"bytes"
+	"context"
 	"reflect"
 	"time"
 

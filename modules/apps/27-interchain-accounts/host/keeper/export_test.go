@@ -5,7 +5,7 @@ package keeper
 */
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	icatypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/types"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"

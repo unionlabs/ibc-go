@@ -5,7 +5,7 @@ package keeper
 */
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 )

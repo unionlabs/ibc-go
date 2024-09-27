@@ -1,7 +1,8 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
+
 	paramtypes "cosmossdk.io/x/params/types"
 )
 

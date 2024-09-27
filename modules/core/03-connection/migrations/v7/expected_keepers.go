@@ -6,5 +6,5 @@ import (
 
 // ConnectionKeeper expected IBC connection keeper
 type ConnectionKeeper interface {
-	CreateSentinelLocalhostConnection(ctx context.Context)
+	CreateSentinelLocalhostConnection(ctx sdk.Context)
 }

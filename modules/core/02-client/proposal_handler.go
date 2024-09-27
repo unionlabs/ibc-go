@@ -1,9 +1,10 @@
 package client
 
 import (
+	"context"
+
 	errorsmod "cosmossdk.io/errors"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "cosmossdk.io/x/gov/types/v1beta1"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/keeper"

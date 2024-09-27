@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	controllertypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
@@ -26,7 +27,7 @@ func NewMigrator(k *Keeper) Migrator {
 
 // AssertChannelCapabilityMigrations checks that all channel capabilities generated using the interchain accounts controller port prefix
 // are owned by the controller submodule and ibc.
-func (m Migrator) AssertChannelCapabilityMigrations(ctx context.Context) error {
+func (m Migrator) AssertChannelCapabilityMigrations(ctx sdk.Context) error {
 	if m.keeper != nil {
 		logger := m.keeper.Logger(ctx)
 		filteredChannels := m.keeper.channelKeeper.GetAllChannelsWithPortPrefix(ctx, icatypes.ControllerPortPrefix)

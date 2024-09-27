@@ -3,7 +3,9 @@ package keeper_test
 import (
 	"fmt"
 
+	"github.com/cosmos/cosmos-sdk/runtime"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	govtypes "cosmossdk.io/x/gov/types"
 
 	icahostkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/keeper"
@@ -30,7 +32,7 @@ func (suite *KeeperTestSuite) TestMigratorMigrateParams() {
 			func() {
 				suite.chainA.GetSimApp().ICAHostKeeper = icahostkeeper.NewKeeper(
 					suite.chainA.Codec,
-					suite.chainA.GetSimApp().GetKey(icahosttypes.StoreKey),
+					runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(icahosttypes.StoreKey)),
 					nil, // assign a nil legacy param subspace
 					suite.chainA.GetSimApp().IBCFeeKeeper,
 					suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,

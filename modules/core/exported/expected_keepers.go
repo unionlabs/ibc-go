@@ -1,7 +1,7 @@
 package exported
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 )

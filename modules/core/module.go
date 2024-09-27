@@ -20,8 +20,10 @@ import (
 	ibcclient "github.com/cosmos/ibc-go/v8/modules/core/02-client"
 	clientkeeper "github.com/cosmos/ibc-go/v8/modules/core/02-client/keeper"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	connection "github.com/cosmos/ibc-go/v8/modules/core/03-connection"
 	connectionkeeper "github.com/cosmos/ibc-go/v8/modules/core/03-connection/keeper"
 	connectiontypes "github.com/cosmos/ibc-go/v8/modules/core/03-connection/types"
+	channel "github.com/cosmos/ibc-go/v8/modules/core/04-channel"
 	channelkeeper "github.com/cosmos/ibc-go/v8/modules/core/04-channel/keeper"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v8/modules/core/client/cli"
@@ -131,7 +133,9 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	clienttypes.RegisterMsgServer(cfg.MsgServer(), am.keeper)
 	connectiontypes.RegisterMsgServer(cfg.MsgServer(), am.keeper)
 	channeltypes.RegisterMsgServer(cfg.MsgServer(), am.keeper)
-	types.RegisterQueryService(cfg.QueryServer(), am.keeper)
+	ibcclient.RegisterQueryService(cfg.MsgServer(), am.keeper)
+	connection.RegisterQueryService(cfg.MsgServer(), am.keeper)
+	channel.RegisterQueryService(cfg.MsgServer(), am.keeper)
 
 	clientMigrator := clientkeeper.NewMigrator(am.keeper.ClientKeeper)
 	if err := cfg.RegisterMigration(exported.ModuleName, 2, clientMigrator.Migrate2to3); err != nil {

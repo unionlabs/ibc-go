@@ -17,7 +17,7 @@ func NewMigrator(keeper Keeper) Migrator {
 }
 
 // MigrateParams migrates params to the default channel params.
-func (m Migrator) MigrateParams(ctx context.Context) error {
+func (m Migrator) MigrateParams(ctx sdk.Context) error {
 	params := channeltypes.DefaultParams()
 	m.keeper.SetParams(ctx, params)
 	m.keeper.Logger(ctx).Info("successfully migrated ibc channel params")
