@@ -218,7 +218,8 @@ func (im IBCModule) OnRecvPacket(
 		eventAttributes = append(eventAttributes, sdk.NewAttribute(types.AttributeKeyAckError, ackErr.Error()))
 	}
 
-	ctx.EventManager().EmitEvent(
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypePacket,
 			eventAttributes...,
@@ -249,7 +250,8 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return err
 	}
 
-	ctx.EventManager().EmitEvent(
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypePacket,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
@@ -264,14 +266,16 @@ func (im IBCModule) OnAcknowledgementPacket(
 
 	switch resp := ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Result:
-		ctx.EventManager().EmitEvent(
+		sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+		sdkCtx.EventManager().EmitEvent(
 			sdk.NewEvent(
 				types.EventTypePacket,
 				sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
 			),
 		)
 	case *channeltypes.Acknowledgement_Error:
-		ctx.EventManager().EmitEvent(
+		sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+		sdkCtx.EventManager().EmitEvent(
 			sdk.NewEvent(
 				types.EventTypePacket,
 				sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
@@ -297,7 +301,8 @@ func (im IBCModule) OnTimeoutPacket(
 		return err
 	}
 
-	ctx.EventManager().EmitEvent(
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeTimeout,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),

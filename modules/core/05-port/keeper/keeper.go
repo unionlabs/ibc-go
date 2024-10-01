@@ -30,7 +30,8 @@ func NewKeeper(sck exported.ScopedKeeper) Keeper {
 
 // Logger returns a module-specific logger.
 func (Keeper) Logger(ctx context.Context) log.Logger {
-	return ctx.Logger().With("module", "x/"+exported.ModuleName+"/"+types.SubModuleName)
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	return sdkCtx.Logger().With("module", "x/"+exported.ModuleName+"/"+types.SubModuleName)
 }
 
 // IsBound checks a given port ID is already bounded.

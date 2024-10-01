@@ -46,7 +46,8 @@ func (cs *ClientState) verifyHeader(
 	ctx context.Context, clientStore storetypes.KVStore, cdc codec.BinaryCodec,
 	header *Header,
 ) error {
-	currentTimestamp := ctx.BlockTime()
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	currentTimestamp := sdkCtx.BlockTime()
 
 	// Retrieve trusted consensus states for each Header in misbehaviour
 	consState, found := GetConsensusState(clientStore, cdc, header.TrustedHeight)
@@ -141,7 +142,8 @@ func (cs ClientState) UpdateState(ctx context.Context, cdc codec.BinaryCodec, cl
 
 	// performance: do not prune in checkTx
 	// simulation must prune for accurate gas estimation
-	if (!ctx.IsCheckTx() && !ctx.IsReCheckTx()) || ctx.ExecMode() == sdk.ExecModeSimulate {
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	if (!sdkCtx.IsCheckTx() && !sdkCtx.IsReCheckTx()) || sdkCtx.ExecMode() == sdk.ExecModeSimulate {
 		cs.pruneOldestConsensusState(ctx, cdc, clientStore)
 	}
 
@@ -187,7 +189,8 @@ func (cs ClientState) pruneOldestConsensusState(ctx context.Context, cdc codec.B
 			panic(errorsmod.Wrapf(clienttypes.ErrConsensusStateNotFound, "failed to retrieve consensus state at height: %s", height))
 		}
 
-		if cs.IsExpired(consState.Timestamp, ctx.BlockTime()) {
+		sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+		if cs.IsExpired(consState.Timestamp, sdkCtx.BlockTime()) {
 			pruneHeight = height
 		}
 

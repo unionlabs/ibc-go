@@ -158,7 +158,8 @@ func (k Keeper) TimeoutExecuted(
 		// then we can move to flushing complete if the timeout has not passed and there are no in-flight packets
 		if found {
 			timeout := counterpartyUpgrade.Timeout
-			selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(ctx.BlockTime().UnixNano())
+			sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+			selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(sdkCtx.BlockTime().UnixNano())
 
 			if timeout.Elapsed(selfHeight, selfTimestamp) {
 				// packet flushing timeout has expired, abort the upgrade and return nil,

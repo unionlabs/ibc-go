@@ -8,8 +8,8 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "cosmossdk.io/x/staking/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cometbft/cometbft/light"
 
@@ -47,7 +47,8 @@ func (c *ConsensusHost) GetSelfConsensusState(ctx context.Context, height export
 	}
 
 	// check that height revision matches chainID revision
-	revision := clienttypes.ParseChainID(ctx.ChainID())
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	revision := clienttypes.ParseChainID(sdkCtx.ChainID())
 	if revision != height.GetRevisionNumber() {
 		return nil, errorsmod.Wrapf(clienttypes.ErrInvalidHeight, "chainID revision number does not match height revision number: expected %d, got %d", revision, height.GetRevisionNumber())
 	}
@@ -77,12 +78,13 @@ func (c *ConsensusHost) ValidateSelfClient(ctx context.Context, clientState expo
 		return clienttypes.ErrClientFrozen
 	}
 
-	if ctx.ChainID() != tmClient.ChainId {
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	if sdkCtx.ChainID() != tmClient.ChainId {
 		return errorsmod.Wrapf(clienttypes.ErrInvalidClient, "invalid chain-id. expected: %s, got: %s",
-			ctx.ChainID(), tmClient.ChainId)
+			sdkCtx.ChainID(), tmClient.ChainId)
 	}
 
-	revision := clienttypes.ParseChainID(ctx.ChainID())
+	revision := clienttypes.ParseChainID(sdkCtx.ChainID())
 
 	// client must be in the same revision as executing chain
 	if tmClient.LatestHeight.RevisionNumber != revision {
@@ -90,7 +92,7 @@ func (c *ConsensusHost) ValidateSelfClient(ctx context.Context, clientState expo
 			tmClient.LatestHeight.RevisionNumber, revision)
 	}
 
-	selfHeight := clienttypes.NewHeight(revision, uint64(ctx.BlockHeight()))
+	selfHeight := clienttypes.NewHeight(revision, uint64(sdkCtx.BlockHeight()))
 	if tmClient.LatestHeight.GTE(selfHeight) {
 		return errorsmod.Wrapf(clienttypes.ErrInvalidClient, "client has LatestHeight %d greater than or equal to chain height %d",
 			tmClient.LatestHeight, selfHeight)

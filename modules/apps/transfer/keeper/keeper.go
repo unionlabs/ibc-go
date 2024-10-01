@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	corestore "cosmossdk.io/core/store"
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"
@@ -13,6 +14,7 @@ import (
 	banktypes "cosmossdk.io/x/bank/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	cmtbytes "github.com/cometbft/cometbft/libs/bytes"
@@ -27,7 +29,7 @@ import (
 
 // Keeper defines the IBC fungible transfer keeper
 type Keeper struct {
-	storeKey       storetypes.StoreKey
+	storeService   corestore.KVStoreService
 	cdc            codec.BinaryCodec
 	legacySubspace types.ParamSubspace
 
@@ -46,7 +48,7 @@ type Keeper struct {
 // NewKeeper creates a new IBC transfer Keeper instance
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	key storetypes.StoreKey,
+	storeService corestore.KVStoreService,
 	legacySubspace types.ParamSubspace,
 	ics4Wrapper porttypes.ICS4Wrapper,
 	channelKeeper types.ChannelKeeper,
@@ -67,7 +69,7 @@ func NewKeeper(
 
 	return Keeper{
 		cdc:            cdc,
-		storeKey:       key,
+		storeService:   storeService,
 		legacySubspace: legacySubspace,
 		ics4Wrapper:    ics4Wrapper,
 		channelKeeper:  channelKeeper,
@@ -112,20 +114,29 @@ func (k Keeper) BindPort(ctx context.Context, portID string) error {
 
 // GetPort returns the portID for the transfer module. Used in ExportGenesis
 func (k Keeper) GetPort(ctx context.Context) string {
-	store := ctx.KVStore(k.storeKey)
-	return string(store.Get(types.PortKey))
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.PortKey)
+	if err != nil {
+		panic(err)
+	}
+	return string(bz)
 }
 
 // SetPort sets the portID for the transfer module. Used in InitGenesis
 func (k Keeper) SetPort(ctx context.Context, portID string) {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.PortKey, []byte(portID))
+	store := k.storeService.OpenKVStore(ctx)
+	if err := store.Set(types.PortKey, []byte(portID)); err != nil {
+		panic(err)
+	}
 }
 
 // GetParams returns the current transfer module parameters.
 func (k Keeper) GetParams(ctx context.Context) types.Params {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get([]byte(types.ParamsKey))
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get([]byte(types.ParamsKey))
+	if err != nil {
+		panic(err)
+	}
 	if bz == nil { // only panic on unset params and not on empty params
 		panic(errors.New("transfer params are not set in store"))
 	}
@@ -137,14 +148,16 @@ func (k Keeper) GetParams(ctx context.Context) types.Params {
 
 // SetParams sets the transfer module parameters.
 func (k Keeper) SetParams(ctx context.Context, params types.Params) {
-	store := ctx.KVStore(k.storeKey)
+	store := k.storeService.OpenKVStore(ctx)
 	bz := k.cdc.MustMarshal(&params)
-	store.Set([]byte(types.ParamsKey), bz)
+	if err := store.Set([]byte(types.ParamsKey), bz); err != nil {
+		panic(err)
+	}
 }
 
 // GetDenomTrace retreives the full identifiers trace and base denomination from the store.
 func (k Keeper) GetDenomTrace(ctx context.Context, denomTraceHash cmtbytes.HexBytes) (types.DenomTrace, bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
+	store := prefix.NewStore(runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx)), types.DenomTraceKey)
 	bz := store.Get(denomTraceHash)
 	if len(bz) == 0 {
 		return types.DenomTrace{}, false
@@ -156,13 +169,13 @@ func (k Keeper) GetDenomTrace(ctx context.Context, denomTraceHash cmtbytes.HexBy
 
 // HasDenomTrace checks if a the key with the given denomination trace hash exists on the store.
 func (k Keeper) HasDenomTrace(ctx context.Context, denomTraceHash cmtbytes.HexBytes) bool {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
+	store := prefix.NewStore(runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx)), types.DenomTraceKey)
 	return store.Has(denomTraceHash)
 }
 
 // SetDenomTrace sets a new {trace hash -> denom trace} pair to the store.
 func (k Keeper) SetDenomTrace(ctx context.Context, denomTrace types.DenomTrace) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DenomTraceKey)
+	store := prefix.NewStore(runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx)), types.DenomTraceKey)
 	bz := k.MustMarshalDenomTrace(denomTrace)
 	store.Set(denomTrace.Hash(), bz)
 }
@@ -181,10 +194,10 @@ func (k Keeper) GetAllDenomTraces(ctx context.Context) types.Traces {
 // IterateDenomTraces iterates over the denomination traces in the store
 // and performs a callback function.
 func (k Keeper) IterateDenomTraces(ctx context.Context, cb func(denomTrace types.DenomTrace) bool) {
-	store := ctx.KVStore(k.storeKey)
+	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	iterator := storetypes.KVStorePrefixIterator(store, types.DenomTraceKey)
 
-	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(k.Logger(ctx), func() error { return iterator.Close() })
 	for ; iterator.Valid(); iterator.Next() {
 		denomTrace := k.MustUnmarshalDenomTrace(iterator.Value())
 		if cb(denomTrace) {
@@ -221,8 +234,11 @@ func (k Keeper) setDenomMetadata(ctx context.Context, denomTrace types.DenomTrac
 // NOTE: if there is no value stored in state for the provided denom then a new Coin is returned for the denom with an initial value of zero.
 // This accommodates callers to simply call `Add()` on the returned Coin as an empty Coin literal (e.g. sdk.Coin{}) will trigger a panic due to the absence of a denom.
 func (k Keeper) GetTotalEscrowForDenom(ctx context.Context, denom string) sdk.Coin {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.TotalEscrowForDenomKey(denom))
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.TotalEscrowForDenomKey(denom))
+	if err != nil {
+		panic(err)
+	}
 	if len(bz) == 0 {
 		return sdk.NewCoin(denom, math.ZeroInt())
 	}
@@ -243,7 +259,7 @@ func (k Keeper) SetTotalEscrowForDenom(ctx context.Context, coin sdk.Coin) {
 		panic(fmt.Errorf("amount cannot be negative: %s", coin.Amount))
 	}
 
-	store := ctx.KVStore(k.storeKey)
+	store := k.storeService.OpenKVStore(ctx)
 	key := types.TotalEscrowForDenomKey(coin.Denom)
 
 	if coin.Amount.IsZero() {
@@ -255,7 +271,9 @@ func (k Keeper) SetTotalEscrowForDenom(ctx context.Context, coin sdk.Coin) {
 	if err != nil {
 		panic(err)
 	}
-	store.Set(key, bz)
+	if err := store.Set(key, bz); err != nil {
+		panic(err)
+	}
 }
 
 // GetAllTotalEscrowed returns the escrow information for all the denominations.
@@ -273,10 +291,10 @@ func (k Keeper) GetAllTotalEscrowed(ctx context.Context) sdk.Coins {
 // and performs a callback function. Denominations for which an invalid value
 // (i.e. not integer) is stored, will be skipped.
 func (k Keeper) IterateTokensInEscrow(ctx context.Context, storeprefix []byte, cb func(denomEscrow sdk.Coin) bool) {
-	store := ctx.KVStore(k.storeKey)
+	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	iterator := storetypes.KVStorePrefixIterator(store, storeprefix)
 
-	defer coretypes.LogDeferred(ctx.Logger(), func() error { return iterator.Close() })
+	defer coretypes.LogDeferred(k.Logger(ctx), func() error { return iterator.Close() })
 	for ; iterator.Valid(); iterator.Next() {
 		denom := strings.TrimPrefix(string(iterator.Key()), fmt.Sprintf("%s/", types.KeyTotalEscrowPrefix))
 		if strings.TrimSpace(denom) == "" {

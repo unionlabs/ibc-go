@@ -343,7 +343,8 @@ func (k Keeper) ChanUpgradeAck(
 	}
 
 	timeout := counterpartyUpgrade.Timeout
-	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(ctx.BlockTime().UnixNano())
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(sdkCtx.BlockTime().UnixNano())
 
 	if timeout.Elapsed(selfHeight, selfTimestamp) {
 		return types.NewUpgradeError(channel.UpgradeSequence, errorsmod.Wrap(timeout.ErrTimeoutElapsed(selfHeight, selfTimestamp), "counterparty upgrade timeout elapsed"))
@@ -465,7 +466,8 @@ func (k Keeper) ChanUpgradeConfirm(
 	}
 
 	timeout := counterpartyUpgrade.Timeout
-	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(ctx.BlockTime().UnixNano())
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(sdkCtx.BlockTime().UnixNano())
 
 	if timeout.Elapsed(selfHeight, selfTimestamp) {
 		return types.NewUpgradeError(channel.UpgradeSequence, errorsmod.Wrap(timeout.ErrTimeoutElapsed(selfHeight, selfTimestamp), "counterparty upgrade timeout elapsed"))
@@ -891,7 +893,8 @@ func (k Keeper) startFlushing(ctx context.Context, portID, channelID string, upg
 // getAbsoluteUpgradeTimeout returns the absolute timeout for the given upgrade.
 func (k Keeper) getAbsoluteUpgradeTimeout(ctx context.Context) types.Timeout {
 	upgradeTimeout := k.GetParams(ctx).UpgradeTimeout
-	return types.NewTimeout(clienttypes.ZeroHeight(), uint64(ctx.BlockTime().UnixNano())+upgradeTimeout.Timestamp)
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	return types.NewTimeout(clienttypes.ZeroHeight(), uint64(sdkCtx.BlockTime().UnixNano())+upgradeTimeout.Timestamp)
 }
 
 // checkForUpgradeCompatibility checks performs stateful validation of self upgrade fields relative to counterparty upgrade.

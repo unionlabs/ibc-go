@@ -1,8 +1,6 @@
 package client
 
 import (
-	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/keeper"
@@ -11,7 +9,7 @@ import (
 )
 
 // BeginBlocker is used to perform IBC client upgrades
-func BeginBlocker(ctx context.Context, k keeper.Keeper) {
+func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	plan, err := k.GetUpgradePlan(ctx)
 	if err == nil {
 		// Once we are at the last block this chain will commit, set the upgraded consensus state

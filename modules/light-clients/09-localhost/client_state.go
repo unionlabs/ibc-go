@@ -73,7 +73,8 @@ func (ClientState) Initialize(ctx context.Context, cdc codec.BinaryCodec, client
 // GetTimestampAtHeight returns the current block time retrieved from the application context. The localhost client does not store consensus states and thus
 // cannot provide a timestamp for the provided height.
 func (ClientState) GetTimestampAtHeight(ctx context.Context, _ storetypes.KVStore, _ codec.BinaryCodec, _ exported.Height) (uint64, error) {
-	return uint64(ctx.BlockTime().UnixNano()), nil
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	return uint64(sdkCtx.BlockTime().UnixNano()), nil
 }
 
 // VerifyMembership is a generic proof verification method which verifies the existence of a given key and value within the IBC store.

@@ -127,7 +127,7 @@ func (k Keeper) sendTransfer(
 		}
 
 		if err := k.bankKeeper.BurnCoins(
-			ctx, types.ModuleName, sdk.NewCoins(token),
+			ctx, k.authKeeper.GetModuleAddress(types.ModuleName), sdk.NewCoins(token),
 		); err != nil {
 			// NOTE: should not happen as the module account was
 			// retrieved on the step above and it has enough balace
@@ -271,7 +271,8 @@ func (k Keeper) OnRecvPacket(ctx context.Context, packet channeltypes.Packet, da
 		k.setDenomMetadata(ctx, denomTrace)
 	}
 
-	ctx.EventManager().EmitEvent(
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeDenomTrace,
 			sdk.NewAttribute(types.AttributeKeyTraceHash, traceHash.String()),

@@ -99,7 +99,8 @@ func (cs ClientState) Status(
 		return exported.Expired
 	}
 
-	if cs.IsExpired(consState.Timestamp, ctx.BlockTime()) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+	if cs.IsExpired(consState.Timestamp, sdkCtx.BlockTime()) {
 		return exported.Expired
 	}
 
@@ -299,7 +300,8 @@ func verifyDelayPeriodPassed(ctx context.Context, store storetypes.KVStore, proo
 			return errorsmod.Wrapf(ErrProcessedTimeNotFound, "processed time not found for height: %s", proofHeight)
 		}
 
-		currentTimestamp := uint64(ctx.BlockTime().UnixNano())
+		sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+		currentTimestamp := uint64(sdkCtx.BlockTime().UnixNano())
 		validTime := processedTime + delayTimePeriod
 
 		// NOTE: delay time period is inclusive, so if currentTimestamp is validTime, then we return no error

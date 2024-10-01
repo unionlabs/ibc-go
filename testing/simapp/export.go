@@ -114,8 +114,9 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx context.Context, jailAllowedAddr
 	app.DistrKeeper.DeleteAllValidatorHistoricalRewards(ctx)
 
 	// set context height to zero
-	height := ctx.BlockHeight()
-	ctx = ctx.WithBlockHeight(0)
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	height := sdkCtx.BlockHeight()
+	ctx = sdkCtx.WithBlockHeight(0)
 
 	// reinitialize all validators
 	err = app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
@@ -167,7 +168,7 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx context.Context, jailAllowedAddr
 	}
 
 	// reset context height
-	ctx = ctx.WithBlockHeight(height)
+	ctx = sdkCtx.WithBlockHeight(height)
 
 	/* Handle staking state. */
 
@@ -203,7 +204,8 @@ func (app *SimApp) prepForZeroHeightGenesis(ctx context.Context, jailAllowedAddr
 
 	// Iterate through validators by power descending, reset bond heights, and
 	// update bond intra-tx counters.
-	store := ctx.KVStore(app.keys[stakingtypes.StoreKey])
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	store := sdkCtx.KVStore(app.keys[stakingtypes.StoreKey])
 	iter := storetypes.KVStoreReversePrefixIterator(store, stakingtypes.ValidatorsKey)
 	counter := int16(0)
 

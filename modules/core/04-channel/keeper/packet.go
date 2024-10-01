@@ -176,7 +176,8 @@ func (k Keeper) RecvPacket(
 	}
 
 	// check if packet timed out by comparing it with the latest height of the chain
-	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(ctx.BlockTime().UnixNano())
+	sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+	selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(sdkCtx.BlockTime().UnixNano())
 	timeout := types.NewTimeout(packet.GetTimeoutHeight().(clienttypes.Height), packet.GetTimeoutTimestamp())
 	if timeout.Elapsed(selfHeight, selfTimestamp) {
 		return errorsmod.Wrap(timeout.ErrTimeoutElapsed(selfHeight, selfTimestamp), "packet timeout elapsed")
@@ -491,7 +492,8 @@ func (k Keeper) AcknowledgePacket(
 		counterpartyUpgrade, found := k.GetCounterpartyUpgrade(ctx, packet.GetSourcePort(), packet.GetSourceChannel())
 		if found {
 			timeout := counterpartyUpgrade.Timeout
-			selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(ctx.BlockTime().UnixNano())
+			sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/7223
+			selfHeight, selfTimestamp := clienttypes.GetSelfHeight(ctx), uint64(sdkCtx.BlockTime().UnixNano())
 
 			if timeout.Elapsed(selfHeight, selfTimestamp) {
 				// packet flushing timeout has expired, abort the upgrade and return nil,

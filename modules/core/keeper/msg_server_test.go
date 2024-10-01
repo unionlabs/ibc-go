@@ -1003,10 +1003,11 @@ func (suite *KeeperTestSuite) TestChannelUpgradeInit() {
 
 				suite.chainA.GetSimApp().IBCMockModule.IBCApp.OnChanUpgradeInit = func(ctx context.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, version string) (string, error) {
 					storeKey := suite.chainA.GetSimApp().GetKey(exported.ModuleName)
-					store := ctx.KVStore(storeKey)
+					sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+					store := sdkCtx.KVStore(storeKey)
 					store.Set(ibcmock.TestKey, ibcmock.TestValue)
 
-					ctx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
+					sdkCtx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
 					return ibcmock.UpgradeVersion, nil
 				}
 			},
@@ -1169,10 +1170,11 @@ func (suite *KeeperTestSuite) TestChannelUpgradeTry() {
 			func() {
 				suite.chainA.GetSimApp().IBCMockModule.IBCApp.OnChanUpgradeTry = func(ctx context.Context, portID, channelID string, order channeltypes.Order, connectionHops []string, counterpartyVersion string) (string, error) {
 					storeKey := suite.chainA.GetSimApp().GetKey(exported.ModuleName)
-					store := ctx.KVStore(storeKey)
+					sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+					store := sdkCtx.KVStore(storeKey)
 					store.Set(ibcmock.TestKey, ibcmock.TestValue)
 
-					ctx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
+					sdkCtx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
 					return ibcmock.UpgradeVersion, nil
 				}
 			},
@@ -1401,7 +1403,8 @@ func (suite *KeeperTestSuite) TestChannelUpgradeAck() {
 					ctx context.Context, portID, channelID, counterpartyVersion string,
 				) error {
 					// set arbitrary value in store to mock application state changes
-					store := ctx.KVStore(suite.chainA.GetSimApp().GetKey(exported.ModuleName))
+					sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+					store := sdkCtx.KVStore(suite.chainA.GetSimApp().GetKey(exported.ModuleName))
 					store.Set([]byte("foo"), []byte("bar"))
 					return fmt.Errorf("mock app callback failed")
 				}
@@ -1474,10 +1477,11 @@ func (suite *KeeperTestSuite) TestChannelUpgradeAck() {
 			func() {
 				suite.chainA.GetSimApp().IBCMockModule.IBCApp.OnChanUpgradeAck = func(ctx context.Context, portID, channelID, counterpartyVersion string) error {
 					storeKey := suite.chainA.GetSimApp().GetKey(exported.ModuleName)
-					store := ctx.KVStore(storeKey)
+					sdkCtx := sdk.UnwrapSDKContext(ctx) // TODO: https://github.com/cosmos/ibc-go/issues/5917
+					store := sdkCtx.KVStore(storeKey)
 					store.Set(ibcmock.TestKey, ibcmock.TestValue)
 
-					ctx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
+					sdkCtx.EventManager().EmitEvent(sdk.NewEvent(ibcmock.MockEventType))
 					return nil
 				}
 			},
