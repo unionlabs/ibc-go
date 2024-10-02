@@ -8,9 +8,10 @@ import (
 	"github.com/cosmos/gogoproto/proto"
 
 	errorsmod "cosmossdk.io/errors"
+	"cosmossdk.io/x/authz"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"cosmossdk.io/x/authz"
+	authztypes "github.com/cosmos/cosmos-sdk/types/authz"
 
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
@@ -32,10 +33,10 @@ func (TransferAuthorization) MsgTypeURL() string {
 }
 
 // Accept implements Authorization.Accept.
-func (a TransferAuthorization) Accept(ctx context.Context, msg proto.Message) (authz.AcceptResponse, error) {
+func (a TransferAuthorization) Accept(ctx context.Context, msg proto.Message) (authztypes.AcceptResponse, error) {
 	msgTransfer, ok := msg.(*MsgTransfer)
 	if !ok {
-		return authz.AcceptResponse{}, errorsmod.Wrap(ibcerrors.ErrInvalidType, "type mismatch")
+		return authztypes.AcceptResponse{}, errorsmod.Wrap(ibcerrors.ErrInvalidType, "type mismatch")
 	}
 
 	for index, allocation := range a.Allocations {
@@ -44,30 +45,30 @@ func (a TransferAuthorization) Accept(ctx context.Context, msg proto.Message) (a
 		}
 
 		if !isAllowedAddress(sdk.UnwrapSDKContext(ctx), msgTransfer.Receiver, allocation.AllowList) {
-			return authz.AcceptResponse{}, errorsmod.Wrap(ibcerrors.ErrInvalidAddress, "not allowed receiver address for transfer")
+			return authztypes.AcceptResponse{}, errorsmod.Wrap(ibcerrors.ErrInvalidAddress, "not allowed receiver address for transfer")
 		}
 
 		err := validateMemo(sdk.UnwrapSDKContext(ctx), msgTransfer.Memo, allocation.AllowedPacketData)
 		if err != nil {
-			return authz.AcceptResponse{}, err
+			return authztypes.AcceptResponse{}, err
 		}
 
 		// If the spend limit is set to the MaxUint256 sentinel value, do not subtract the amount from the spend limit.
 		if allocation.SpendLimit.AmountOf(msgTransfer.Token.Denom).Equal(UnboundedSpendLimit()) {
-			return authz.AcceptResponse{Accept: true, Delete: false, Updated: nil}, nil
+			return authztypes.AcceptResponse{Accept: true, Delete: false, Updated: nil}, nil
 		}
 
 		limitLeft, isNegative := allocation.SpendLimit.SafeSub(msgTransfer.Token)
 		if isNegative {
-			return authz.AcceptResponse{}, errorsmod.Wrapf(ibcerrors.ErrInsufficientFunds, "requested amount is more than spend limit")
+			return authztypes.AcceptResponse{}, errorsmod.Wrapf(ibcerrors.ErrInsufficientFunds, "requested amount is more than spend limit")
 		}
 
 		if limitLeft.IsZero() {
 			a.Allocations = append(a.Allocations[:index], a.Allocations[index+1:]...)
 			if len(a.Allocations) == 0 {
-				return authz.AcceptResponse{Accept: true, Delete: true}, nil
+				return authztypes.AcceptResponse{Accept: true, Delete: true}, nil
 			}
-			return authz.AcceptResponse{Accept: true, Delete: false, Updated: &TransferAuthorization{
+			return authztypes.AcceptResponse{Accept: true, Delete: false, Updated: &TransferAuthorization{
 				Allocations: a.Allocations,
 			}}, nil
 		}
@@ -79,12 +80,12 @@ func (a TransferAuthorization) Accept(ctx context.Context, msg proto.Message) (a
 			AllowedPacketData: allocation.AllowedPacketData,
 		}
 
-		return authz.AcceptResponse{Accept: true, Delete: false, Updated: &TransferAuthorization{
+		return authztypes.AcceptResponse{Accept: true, Delete: false, Updated: &TransferAuthorization{
 			Allocations: a.Allocations,
 		}}, nil
 	}
 
-	return authz.AcceptResponse{}, errorsmod.Wrapf(ibcerrors.ErrNotFound, "requested port and channel allocation does not exist")
+	return authztypes.AcceptResponse{}, errorsmod.Wrapf(ibcerrors.ErrNotFound, "requested port and channel allocation does not exist")
 }
 
 // ValidateBasic implements Authorization.ValidateBasic.
@@ -132,7 +133,7 @@ func (a TransferAuthorization) ValidateBasic() error {
 
 // isAllowedAddress returns a boolean indicating if the receiver address is valid for transfer.
 // gasCostPerIteration gas is consumed for each iteration.
-func isAllowedAddress(ctx context.Context, receiver string, allowedAddrs []string) bool {
+func isAllowedAddress(ctx sdk.Context, receiver string, allowedAddrs []string) bool {
 	if len(allowedAddrs) == 0 {
 		return true
 	}
@@ -149,7 +150,7 @@ func isAllowedAddress(ctx context.Context, receiver string, allowedAddrs []strin
 }
 
 // validateMemo returns a nil error indicating if the memo is valid for transfer.
-func validateMemo(ctx context.Context, memo string, allowedMemos []string) error {
+func validateMemo(ctx sdk.Context, memo string, allowedMemos []string) error {
 	// if the allow list is empty, then the memo must be an empty string
 	if len(allowedMemos) == 0 {
 		if len(strings.TrimSpace(memo)) != 0 {

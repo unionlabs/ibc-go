@@ -14,11 +14,10 @@ import (
 	stakingtypes "cosmossdk.io/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	tmbytes "github.com/cometbft/cometbft/libs/bytes"
-	tmtypes "github.com/cometbft/cometbft/types"
+	cmtbytes "github.com/cometbft/cometbft/libs/bytes"
+	cmttypes "github.com/cometbft/cometbft/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/keeper"
 	"github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
@@ -58,14 +57,14 @@ type KeeperTestSuite struct {
 	ctx            context.Context
 	keeper         *keeper.Keeper
 	consensusState *ibctm.ConsensusState
-	valSet         *tmtypes.ValidatorSet
-	valSetHash     tmbytes.HexBytes
-	privVal        tmtypes.PrivValidator
+	valSet         *cmttypes.ValidatorSet
+	valSetHash     cmtbytes.HexBytes
+	privVal        cmttypes.PrivValidator
 	now            time.Time
 	past           time.Time
 	solomachine    *ibctesting.Solomachine
 
-	signers map[string]tmtypes.PrivValidator
+	signers map[string]cmttypes.PrivValidator
 }
 
 func (suite *KeeperTestSuite) SetupTest() {
@@ -82,15 +81,15 @@ func (suite *KeeperTestSuite) SetupTest() {
 	suite.cdc = app.AppCodec()
 	suite.ctx = app.BaseApp.NewContext(isCheckTx)
 	suite.keeper = &app.IBCKeeper.ClientKeeper
-	suite.privVal = ibctestingmock.NewPV()
+	suite.privVal = cmttypes.NewMockPV()
 	pubKey, err := suite.privVal.GetPubKey()
 	suite.Require().NoError(err)
 
-	validator := tmtypes.NewValidator(pubKey, 1)
-	suite.valSet = tmtypes.NewValidatorSet([]*tmtypes.Validator{validator})
+	validator := cmttypes.NewValidator(pubKey, 1)
+	suite.valSet = cmttypes.NewValidatorSet([]*cmttypes.Validator{validator})
 	suite.valSetHash = suite.valSet.Hash()
 
-	suite.signers = make(map[string]tmtypes.PrivValidator, 1)
+	suite.signers = make(map[string]cmttypes.PrivValidator, 1)
 	suite.signers[validator.Address.String()] = suite.privVal
 
 	suite.consensusState = ibctm.NewConsensusState(suite.now, commitmenttypes.NewMerkleRoot([]byte("hash")), suite.valSetHash)
@@ -108,10 +107,6 @@ func (suite *KeeperTestSuite) SetupTest() {
 		val.Status = stakingtypes.Bonded
 		val.Tokens = sdkmath.NewInt(rand.Int63())
 		validators.Validators = append(validators.Validators, val)
-
-		hi := stakingtypes.NewHistoricalInfo(suite.ctx.BlockHeader(), validators, sdk.DefaultPowerReduction)
-		err = app.StakingKeeper.SetHistoricalInfo(suite.ctx, int64(i), &hi)
-		suite.Require().NoError(err)
 	}
 
 	suite.solomachine = ibctesting.NewSolomachine(suite.T(), suite.chainA.Codec, "solomachinesingle", "testing", 1)

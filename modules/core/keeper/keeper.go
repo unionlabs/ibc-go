@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	storetypes "cosmossdk.io/store/types"
+	corestore "cosmossdk.io/core/store"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 
@@ -21,13 +21,8 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 )
 
-var _ types.QueryServer = (*Keeper)(nil)
-
 // Keeper defines each ICS keeper for IBC
 type Keeper struct {
-	// implements gRPC QueryServer interface
-	types.QueryServer
-
 	cdc codec.BinaryCodec
 
 	ClientKeeper     clientkeeper.Keeper
@@ -41,7 +36,7 @@ type Keeper struct {
 
 // NewKeeper creates a new ibc Keeper
 func NewKeeper(
-	cdc codec.BinaryCodec, key storetypes.StoreKey, paramSpace types.ParamSubspace,
+	cdc codec.BinaryCodec, storeService corestore.KVStoreService, paramSpace types.ParamSubspace,
 	stakingKeeper clienttypes.StakingKeeper, upgradeKeeper clienttypes.UpgradeKeeper,
 	scopedKeeper capabilitykeeper.ScopedKeeper, authority string,
 ) *Keeper {
@@ -61,10 +56,10 @@ func NewKeeper(
 		panic(errors.New("authority must be non-empty"))
 	}
 
-	clientKeeper := clientkeeper.NewKeeper(cdc, key, paramSpace, stakingKeeper, upgradeKeeper)
-	connectionKeeper := connectionkeeper.NewKeeper(cdc, key, paramSpace, clientKeeper)
+	clientKeeper := clientkeeper.NewKeeper(cdc, storeService, paramSpace, stakingKeeper, upgradeKeeper)
+	connectionKeeper := connectionkeeper.NewKeeper(cdc, storeService, paramSpace, clientKeeper)
 	portKeeper := portkeeper.NewKeeper(scopedKeeper)
-	channelKeeper := channelkeeper.NewKeeper(cdc, key, clientKeeper, connectionKeeper, &portKeeper, scopedKeeper)
+	channelKeeper := channelkeeper.NewKeeper(cdc, storeService, clientKeeper, connectionKeeper, &portKeeper, scopedKeeper)
 
 	keeper := &Keeper{
 		cdc:              cdc,

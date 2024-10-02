@@ -624,9 +624,10 @@ func (suite *KeeperTestSuite) TestQueryUpgradedConsensusStates() {
 			"valid consensus state",
 			func() {
 				req = &types.QueryUpgradedConsensusStateRequest{}
-				lastHeight := types.NewHeight(0, uint64(suite.ctx.BlockHeight()))
+				ctx := suite.chainA.GetContext()
+				lastHeight := types.NewHeight(0, uint64(ctx.BlockHeight()))
 				height = int64(lastHeight.GetRevisionHeight())
-				suite.ctx = suite.ctx.WithBlockHeight(height)
+				suite.ctx = ctx.WithBlockHeight(height)
 
 				expConsensusState = types.MustPackConsensusState(suite.consensusState)
 				bz := types.MustMarshalConsensusState(suite.cdc, suite.consensusState)

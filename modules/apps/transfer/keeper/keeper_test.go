@@ -8,7 +8,6 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
-	minttypes "cosmossdk.io/x/mint/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/runtime"
@@ -55,12 +54,12 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 		{"success", func() {
 			keeper.NewKeeper(
 				suite.chainA.GetSimApp().AppCodec(),
-				suite.chainA.GetSimApp().GetKey(types.StoreKey),
+				runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(types.StoreKey)),
 				suite.chainA.GetSimApp().GetSubspace(types.ModuleName),
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.PortKeeper,
-				suite.chainA.GetSimApp().AccountKeeper,
+				suite.chainA.GetSimApp().AuthKeeper,
 				suite.chainA.GetSimApp().BankKeeper,
 				suite.chainA.GetSimApp().ScopedTransferKeeper,
 				suite.chainA.GetSimApp().ICAControllerKeeper.GetAuthority(),
@@ -69,7 +68,7 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 		{"failure: transfer module account does not exist", func() {
 			keeper.NewKeeper(
 				suite.chainA.GetSimApp().AppCodec(),
-				suite.chainA.GetSimApp().GetKey(types.StoreKey),
+				runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(types.StoreKey)),
 				suite.chainA.GetSimApp().GetSubspace(types.ModuleName),
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
@@ -83,12 +82,12 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 		{"failure: empty authority", func() {
 			keeper.NewKeeper(
 				suite.chainA.GetSimApp().AppCodec(),
-				suite.chainA.GetSimApp().GetKey(types.StoreKey),
+				runtime.NewKVStoreService(suite.chainA.GetSimApp().GetKey(types.StoreKey)),
 				suite.chainA.GetSimApp().GetSubspace(types.ModuleName),
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.PortKeeper,
-				suite.chainA.GetSimApp().AccountKeeper,
+				suite.chainA.GetSimApp().AuthKeeper,
 				suite.chainA.GetSimApp().BankKeeper,
 				suite.chainA.GetSimApp().ScopedTransferKeeper,
 				"", // authority
@@ -188,7 +187,6 @@ func (suite *KeeperTestSuite) TestSetGetTotalEscrowForDenom() {
 func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 	var (
 		store           storetypes.KVStore
-		cdc             codec.Codec
 		expDenomEscrows sdk.Coins
 	)
 
@@ -204,7 +202,8 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 				amount := sdkmath.NewInt(100)
 				expDenomEscrows = append(expDenomEscrows, sdk.NewCoin(denom, amount))
 
-				bz := cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err := amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set(types.TotalEscrowForDenomKey(denom), bz)
 			},
 			true,
@@ -216,14 +215,16 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 				amount := sdkmath.NewInt(100)
 				expDenomEscrows = append(expDenomEscrows, sdk.NewCoin(denom, amount))
 
-				bz := cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err := amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set(types.TotalEscrowForDenomKey(denom), bz)
 
 				denom = "bar/foo"
 				amount = sdkmath.NewInt(50)
 				expDenomEscrows = append(expDenomEscrows, sdk.NewCoin(denom, amount))
 
-				bz = cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err = amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set(types.TotalEscrowForDenomKey(denom), bz)
 			},
 			true,
@@ -235,7 +236,8 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 				amount := sdkmath.NewInt(100)
 				expDenomEscrows = append(expDenomEscrows, sdk.NewCoin(denom, amount))
 
-				bz := cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err := amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set(types.TotalEscrowForDenomKey(denom), bz)
 			},
 			true,
@@ -246,7 +248,8 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 				denom := ""
 				amount := sdkmath.ZeroInt()
 
-				bz := cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err := amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set(types.TotalEscrowForDenomKey(denom), bz)
 			},
 			false,
@@ -257,7 +260,8 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 				denom := "uatom"
 				amount := sdkmath.ZeroInt()
 
-				bz := cdc.MustMarshal(&sdk.IntProto{Int: amount})
+				bz, err := amount.Marshal()
+				suite.Require().NoError(err)
 				store.Set([]byte(fmt.Sprintf("wrong-prefix/%s", denom)), bz)
 			},
 			false,
@@ -275,7 +279,6 @@ func (suite *KeeperTestSuite) TestGetAllDenomEscrows() {
 
 			storeKey := suite.chainA.GetSimApp().GetKey(types.ModuleName)
 			store = ctx.KVStore(storeKey)
-			cdc = suite.chainA.App.AppCodec()
 
 			tc.malleate()
 
