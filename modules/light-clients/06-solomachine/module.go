@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"cosmossdk.io/core/appmodule"
+	coreregistry "cosmossdk.io/core/registry"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -24,6 +25,9 @@ var (
 // a no-op.
 type AppModuleBasic struct{}
 
+// IsAppModule implements the appmodule.AppModule interface.
+func (AppModuleBasic) IsAppModule() {}
+
 // Name returns the solo machine module name.
 func (AppModuleBasic) Name() string {
 	return ModuleName
@@ -36,7 +40,7 @@ func (AppModule) IsOnePerModuleType() {}
 func (AppModule) IsAppModule() {}
 
 // RegisterLegacyAminoCodec performs a no-op. The solo machine client does not support amino.
-func (AppModuleBasic) RegisterLegacyAminoCodec(*codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(coreregistry.AminoRegistrar) {}
 
 // RegisterInterfaces registers module concrete types into protobuf Any. This allows core IBC
 // to unmarshal solo machine types.
@@ -70,6 +74,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule is the application module for the Solomachine client module
 type AppModule struct {
 	AppModuleBasic
+	lightClientModule LightClientModule
 }
 
 // NewAppModule creates a new Solomachine client module
