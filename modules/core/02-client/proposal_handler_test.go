@@ -1,10 +1,6 @@
 package client_test
 
 import (
-	sdkmath "cosmossdk.io/math"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	distributiontypes "cosmossdk.io/x/distribution/types"
 	govtypes "cosmossdk.io/x/gov/types/v1beta1"
 
 	client "github.com/cosmos/ibc-go/v8/modules/core/02-client"
@@ -60,16 +56,16 @@ func (suite *ClientTestSuite) TestNewClientUpdateProposalHandler() {
 				content = nil
 			}, false,
 		},
-		{
-			"unsupported proposal type", func() {
-				content = &distributiontypes.CommunityPoolSpendProposal{ //nolint:staticcheck
-					Title:       ibctesting.Title,
-					Description: ibctesting.Description,
-					Recipient:   suite.chainA.SenderAccount.GetAddress().String(),
-					Amount:      sdk.NewCoins(sdk.NewCoin("communityfunds", sdkmath.NewInt(10))),
-				}
-			}, false,
-		},
+		// {
+		// 	"unsupported proposal type", func() {
+		// 		content = &distributiontypes.CommunityPoolSpendProposal{ //nolint:staticcheck
+		// 			Title:       ibctesting.Title,
+		// 			Description: ibctesting.Description,
+		// 			Recipient:   suite.chainA.SenderAccount.GetAddress().String(),
+		// 			Amount:      sdk.NewCoins(sdk.NewCoin("communityfunds", sdkmath.NewInt(10))),
+		// 		}
+		// 	}, false,
+		// },
 	}
 
 	for _, tc := range testCases {

@@ -3,7 +3,6 @@ package types
 import (
 	errorsmod "cosmossdk.io/errors"
 
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
@@ -25,9 +24,6 @@ var (
 	_ sdk.HasValidateBasic = (*MsgConnectionOpenAck)(nil)
 	_ sdk.HasValidateBasic = (*MsgConnectionOpenTry)(nil)
 	_ sdk.HasValidateBasic = (*MsgUpdateParams)(nil)
-
-	_ codectypes.UnpackInterfacesMessage = (*MsgConnectionOpenTry)(nil)
-	_ codectypes.UnpackInterfacesMessage = (*MsgConnectionOpenAck)(nil)
 )
 
 // NewMsgConnectionOpenInit creates a new MsgConnectionOpenInit instance. It sets the
@@ -143,11 +139,6 @@ func (msg MsgConnectionOpenTry) ValidateBasic() error {
 	return msg.Counterparty.ValidateBasic()
 }
 
-// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (msg MsgConnectionOpenTry) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error {
-	return unpacker.UnpackAny(msg.ClientState, new(exported.ClientState))
-}
-
 // GetSigners implements sdk.Msg
 func (msg MsgConnectionOpenTry) GetSigners() []sdk.AccAddress {
 	accAddr, err := sdk.AccAddressFromBech32(msg.Signer)
@@ -178,11 +169,6 @@ func NewMsgConnectionOpenAck(
 		Version:                  version,
 		Signer:                   signer,
 	}
-}
-
-// UnpackInterfaces implements UnpackInterfacesMessage.UnpackInterfaces
-func (msg MsgConnectionOpenAck) UnpackInterfaces(unpacker codectypes.AnyUnpacker) error {
-	return unpacker.UnpackAny(msg.ClientState, new(exported.ClientState))
 }
 
 // ValidateBasic implements sdk.Msg

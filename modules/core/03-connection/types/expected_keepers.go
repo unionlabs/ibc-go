@@ -6,6 +6,8 @@ import (
 	storetypes "cosmossdk.io/store/types"
 	paramtypes "cosmossdk.io/x/params/types"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 )
 
@@ -22,5 +24,5 @@ type ClientKeeper interface {
 
 // ParamSubspace defines the expected Subspace interface for module parameters.
 type ParamSubspace interface {
-	GetParamSet(ctx context.Context, ps paramtypes.ParamSet)
+	GetParamSet(ctx sdk.Context, ps paramtypes.ParamSet)
 }

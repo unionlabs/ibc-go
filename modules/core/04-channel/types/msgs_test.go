@@ -14,11 +14,12 @@ import (
 	"cosmossdk.io/store/metrics"
 	"cosmossdk.io/store/rootmulti"
 	storetypes "cosmossdk.io/store/types"
+	govtypes "cosmossdk.io/x/gov/types"
 
+	"github.com/cosmos/cosmos-sdk/codec/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	moduletestutil "github.com/cosmos/cosmos-sdk/types/module/testutil"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	govtypes "cosmossdk.io/x/gov/types"
 
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
@@ -263,8 +264,8 @@ func (suite *TypesTestSuite) TestMsgChannelOpenInitGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelOpenInit(portid, version, types.ORDERED, connHops, cpportid, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -435,8 +436,8 @@ func (suite *TypesTestSuite) TestMsgChannelOpenTryGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelOpenTry(portid, version, types.ORDERED, connHops, cpportid, cpchanid, version, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -546,8 +547,8 @@ func (suite *TypesTestSuite) TestMsgChannelOpenAckGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelOpenAck(portid, chanid, chanid, version, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -641,8 +642,8 @@ func (suite *TypesTestSuite) TestMsgChannelOpenConfirmGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelOpenConfirm(portid, chanid, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -731,8 +732,8 @@ func (suite *TypesTestSuite) TestMsgChannelCloseInitGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelCloseInit(portid, chanid, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -831,8 +832,8 @@ func (suite *TypesTestSuite) TestMsgChannelCloseConfirmGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgChannelCloseConfirm(portid, chanid, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -888,8 +889,8 @@ func (suite *TypesTestSuite) TestMsgRecvPacketGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgRecvPacket(packet, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -950,8 +951,8 @@ func (suite *TypesTestSuite) TestMsgTimeoutGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgTimeout(packet, 1, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1022,8 +1023,8 @@ func (suite *TypesTestSuite) TestMsgTimeoutOnCloseGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgTimeoutOnClose(packet, 1, suite.proof, suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1084,8 +1085,8 @@ func (suite *TypesTestSuite) TestMsgAcknowledgementGetSigners() {
 	suite.Require().NoError(err)
 	msg := types.NewMsgAcknowledgement(packet, packet.GetData(), suite.proof, height, addr)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1172,8 +1173,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeInitGetSigners() {
 		addr,
 	)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1302,8 +1303,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeTryGetSigners() {
 		addr,
 	)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1409,8 +1410,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeAckGetSigners() {
 		height, addr,
 	)
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1521,8 +1522,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeConfirmGetSigners() {
 
 	msg := &types.MsgChannelUpgradeConfirm{Signer: addr}
 
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1712,8 +1713,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeTimeoutGetSigners() {
 		suite.proof,
 		height, addr,
 	)
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1792,8 +1793,8 @@ func (suite *TypesTestSuite) TestMsgChannelUpgradeCancelGetSigners() {
 	suite.Require().NoError(err)
 
 	msg := types.NewMsgChannelUpgradeCancel(ibctesting.MockPort, ibctesting.FirstChannelID, types.ErrorReceipt{Sequence: 1}, suite.proof, height, addr)
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])
@@ -1920,8 +1921,8 @@ func (suite *TypesTestSuite) TestMsgPruneAcknowledgementsGetSigners() {
 	suite.Require().NoError(err)
 
 	msg := types.NewMsgPruneAcknowledgements(ibctesting.MockPort, ibctesting.FirstChannelID, 0, addr)
-	encodingCfg := moduletestutil.MakeTestEncodingConfig(ibc.AppModuleBasic{})
-	signers, _, err := encodingCfg.Codec.GetMsgV1Signers(msg)
+	encodingCfg := moduletestutil.MakeTestEncodingConfig(testutil.CodecOptions{}, ibc.AppModule{})
+	signers, _, err := encodingCfg.Codec.GetMsgSigners(msg)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal(expSigner.Bytes(), signers[0])

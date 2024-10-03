@@ -145,7 +145,7 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.PortKeeper,
-				suite.chainA.GetSimApp().AccountKeeper,
+				suite.chainA.GetSimApp().AuthKeeper,
 				suite.chainA.GetSimApp().ScopedICAHostKeeper,
 				suite.chainA.GetSimApp().MsgServiceRouter(),
 				suite.chainA.GetSimApp().ICAHostKeeper.GetAuthority(),
@@ -173,7 +173,7 @@ func (suite *KeeperTestSuite) TestNewKeeper() {
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.ChannelKeeper,
 				suite.chainA.GetSimApp().IBCKeeper.PortKeeper,
-				suite.chainA.GetSimApp().AccountKeeper,
+				suite.chainA.GetSimApp().AuthKeeper,
 				suite.chainA.GetSimApp().ScopedICAHostKeeper,
 				suite.chainA.GetSimApp().MsgServiceRouter(),
 				"", // authority

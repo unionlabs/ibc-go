@@ -4,6 +4,8 @@ import (
 	"context"
 	"math/rand"
 
+	coreaddress "cosmossdk.io/core/address"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -22,7 +24,7 @@ const (
 // ProposalMsgs defines the module weighted proposals' contents
 func ProposalMsgs() []simtypes.WeightedProposalMsg {
 	return []simtypes.WeightedProposalMsg{
-		simulation.NewWeightedProposalMsg(
+		simulation.NewWeightedProposalMsgX(
 			OpWeightMsgUpdateParams,
 			DefaultWeightMsgUpdateParams,
 			SimulateMsgUpdateParams,
@@ -31,13 +33,17 @@ func ProposalMsgs() []simtypes.WeightedProposalMsg {
 }
 
 // SimulateMsgUpdateParams returns a MsgUpdateParams
-func SimulateMsgUpdateParams(_ *rand.Rand, _ context.Context, _ []simtypes.Account) sdk.Msg {
-	var gov sdk.AccAddress = address.Module("gov")
+func SimulateMsgUpdateParams(_ context.Context, _ *rand.Rand, _ []simtypes.Account, accCdc coreaddress.Codec) (sdk.Msg, error) {
+	gov := address.Module("gov")
+	govString, err := accCdc.BytesToString(gov)
+	if err != nil {
+		return nil, err
+	}
 	params := types.DefaultParams()
 	params.SendEnabled = false
 
 	return &types.MsgUpdateParams{
-		Signer: gov.String(),
+		Signer: govString,
 		Params: params,
-	}
+	}, nil
 }

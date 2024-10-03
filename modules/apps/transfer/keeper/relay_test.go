@@ -6,9 +6,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktestutil "cosmossdk.io/x/bank/testutil"
 	banktypes "cosmossdk.io/x/bank/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
@@ -80,7 +80,7 @@ func (suite *KeeperTestSuite) TestSendTransfer() {
 		{
 			"transfer failed - sender account is blocked",
 			func() {
-				sender = suite.chainA.GetSimApp().AccountKeeper.GetModuleAddress(types.ModuleName)
+				sender = suite.chainA.GetSimApp().AuthKeeper.GetModuleAddress(types.ModuleName)
 			}, false,
 		},
 		{
@@ -334,7 +334,7 @@ func (suite *KeeperTestSuite) TestOnRecvPacket() {
 		{
 			"failure: receive on module account",
 			func() {
-				receiver = suite.chainB.GetSimApp().AccountKeeper.GetModuleAddress(types.ModuleName).String()
+				receiver = suite.chainB.GetSimApp().AuthKeeper.GetModuleAddress(types.ModuleName).String()
 			}, false, false,
 		},
 
@@ -342,7 +342,7 @@ func (suite *KeeperTestSuite) TestOnRecvPacket() {
 		{
 			"failure: receive on module account on source chain",
 			func() {
-				receiver = suite.chainB.GetSimApp().AccountKeeper.GetModuleAddress(types.ModuleName).String()
+				receiver = suite.chainB.GetSimApp().AuthKeeper.GetModuleAddress(types.ModuleName).String()
 				expEscrowAmount = sdkmath.NewInt(100)
 			}, true, false,
 		},

@@ -168,9 +168,11 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 
 // InitGenesis performs genesis initialization for the interchain accounts module.
 // It returns no validator updates.
-func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, data json.RawMessage) {
+func (am AppModule) InitGenesis(ctx context.Context, data json.RawMessage) error {
 	var genesisState genesistypes.GenesisState
-	cdc.MustUnmarshalJSON(data, &genesisState)
+	if err := am.cdc.UnmarshalJSON(data, &genesisState); err != nil {
+		return err
+	}
 
 	if am.controllerKeeper != nil {
 		controllerkeeper.InitGenesis(ctx, *am.controllerKeeper, genesisState.ControllerGenesisState)
@@ -179,6 +181,7 @@ func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, data j
 	if am.hostKeeper != nil {
 		hostkeeper.InitGenesis(ctx, *am.hostKeeper, genesisState.HostGenesisState)
 	}
+	return nil
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the interchain accounts module

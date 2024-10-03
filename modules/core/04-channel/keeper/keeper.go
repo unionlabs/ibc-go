@@ -526,10 +526,10 @@ func (k Keeper) GetChannelClientState(ctx context.Context, portID, channelID str
 }
 
 // GetConnection wraps the connection keeper's GetConnection function.
-func (k Keeper) GetConnection(ctx context.Context, connectionID string) (exported.ConnectionI, error) {
+func (k Keeper) GetConnection(ctx context.Context, connectionID string) (connectiontypes.ConnectionEnd, error) {
 	connection, found := k.connectionKeeper.GetConnection(ctx, connectionID)
 	if !found {
-		return nil, errorsmod.Wrapf(connectiontypes.ErrConnectionNotFound, "connection-id: %s", connectionID)
+		return connectiontypes.ConnectionEnd{}, errorsmod.Wrapf(connectiontypes.ErrConnectionNotFound, "connection-id: %s", connectionID)
 	}
 
 	return connection, nil

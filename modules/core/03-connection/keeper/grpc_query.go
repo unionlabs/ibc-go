@@ -9,6 +9,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/store/prefix"
 
+	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 
@@ -53,7 +54,7 @@ func (k Keeper) Connections(c context.Context, req *types.QueryConnectionsReques
 	ctx := sdk.UnwrapSDKContext(c)
 
 	var connections []*types.IdentifiedConnection
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(host.KeyConnectionPrefix))
+	store := prefix.NewStore(runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx)), []byte(host.KeyConnectionPrefix))
 
 	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
 		var result types.ConnectionEnd

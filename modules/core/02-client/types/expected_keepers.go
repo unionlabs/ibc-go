@@ -6,14 +6,12 @@ import (
 
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "cosmossdk.io/x/params/types"
-	stakingtypes "cosmossdk.io/x/staking/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // StakingKeeper expected staking keeper
 type StakingKeeper interface {
-	GetHistoricalInfo(ctx context.Context, height int64) (stakingtypes.HistoricalInfo, error)
 	UnbondingTime(ctx context.Context) (time.Duration, error)
 }
 
@@ -30,5 +28,5 @@ type UpgradeKeeper interface {
 
 // ParamSubspace defines the expected Subspace interface for module parameters.
 type ParamSubspace interface {
-	GetParamSet(ctx context.Context, ps paramtypes.ParamSet)
+	GetParamSet(ctx sdk.Context, ps paramtypes.ParamSet)
 }

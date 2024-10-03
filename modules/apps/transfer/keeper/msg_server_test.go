@@ -3,8 +3,8 @@ package keeper_test
 import (
 	sdkmath "cosmossdk.io/math"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "cosmossdk.io/x/bank/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
@@ -57,7 +57,7 @@ func (suite *KeeperTestSuite) TestMsgTransfer() {
 		{
 			"sender is a blocked address",
 			func() {
-				msg.Sender = suite.chainA.GetSimApp().AccountKeeper.GetModuleAddress(types.ModuleName).String()
+				msg.Sender = suite.chainA.GetSimApp().AuthKeeper.GetModuleAddress(types.ModuleName).String()
 			},
 			false,
 		},

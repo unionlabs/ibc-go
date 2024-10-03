@@ -3,8 +3,8 @@ package keeper_test
 import (
 	sdkmath "cosmossdk.io/math"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	minttypes "cosmossdk.io/x/mint/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/cosmos/ibc-go/v8/modules/apps/29-fee/keeper"
 	"github.com/cosmos/ibc-go/v8/modules/apps/29-fee/types"
@@ -172,7 +172,7 @@ func (suite *KeeperTestSuite) TestMigrate1to2() {
 
 		refundAcc = suite.chainA.SenderAccount.GetAddress()
 		packetFee = types.NewPacketFee(fee, refundAcc.String(), []string(nil))
-		moduleAcc = suite.chainA.GetSimApp().AccountKeeper.GetModuleAddress(types.ModuleName)
+		moduleAcc = suite.chainA.GetSimApp().AuthKeeper.GetModuleAddress(types.ModuleName)
 		packetID = channeltypes.NewPacketID(suite.path.EndpointA.ChannelConfig.PortID, suite.path.EndpointA.ChannelID, 1)
 		packetFees = nil
 

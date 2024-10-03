@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"context"
 	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
@@ -53,7 +52,7 @@ func (m Migrator) AssertChannelCapabilityMigrations(ctx sdk.Context) error {
 }
 
 // MigrateParams migrates the controller submodule's parameters from the x/params to self store.
-func (m Migrator) MigrateParams(ctx context.Context) error {
+func (m Migrator) MigrateParams(ctx sdk.Context) error {
 	if m.keeper != nil {
 		params := controllertypes.DefaultParams()
 		if m.keeper.legacySubspace != nil {
