@@ -5,8 +5,6 @@ import (
 	circuittypes "cosmossdk.io/x/circuit/types"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
-	consensusparamtypes "cosmossdk.io/x/consensus/types"
-
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
 	ibcmock "github.com/cosmos/ibc-go/v8/testing/mock"
@@ -41,7 +39,7 @@ func (app *SimApp) registerUpgradeHandlers() {
 			app.ModuleManager,
 			app.configurator,
 			app.appCodec,
-			app.IBCKeeper.ClientKeeper,
+			*app.IBCKeeper.ClientKeeper,
 			app.ConsensusParamsKeeper,
 			app.ParamsKeeper,
 		),
@@ -49,7 +47,7 @@ func (app *SimApp) registerUpgradeHandlers() {
 
 	app.UpgradeKeeper.SetUpgradeHandler(
 		upgrades.V7_1,
-		upgrades.CreateV7LocalhostUpgradeHandler(app.ModuleManager, app.configurator, app.IBCKeeper.ClientKeeper),
+		upgrades.CreateV7LocalhostUpgradeHandler(app.ModuleManager, app.configurator, *app.IBCKeeper.ClientKeeper),
 	)
 
 	app.UpgradeKeeper.SetUpgradeHandler(

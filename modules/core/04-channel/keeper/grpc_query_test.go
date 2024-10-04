@@ -7,6 +7,7 @@ import (
 
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	connectiontypes "github.com/cosmos/ibc-go/v8/modules/core/03-connection/types"
+	"github.com/cosmos/ibc-go/v8/modules/core/04-channel/keeper"
 	"github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
@@ -95,7 +96,8 @@ func (suite *KeeperTestSuite) TestQueryChannel() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.Channel(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.Channel(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -193,7 +195,8 @@ func (suite *KeeperTestSuite) TestQueryChannels() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.Channels(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.Channels(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -312,7 +315,8 @@ func (suite *KeeperTestSuite) TestQueryConnectionChannels() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.ConnectionChannels(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.ConnectionChannels(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -439,7 +443,8 @@ func (suite *KeeperTestSuite) TestQueryChannelClientState() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.ChannelClientState(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.ChannelClientState(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -582,7 +587,8 @@ func (suite *KeeperTestSuite) TestQueryChannelConsensusState() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.ChannelConsensusState(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.ChannelConsensusState(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -691,7 +697,8 @@ func (suite *KeeperTestSuite) TestQueryPacketCommitment() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.PacketCommitment(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.PacketCommitment(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -786,7 +793,8 @@ func (suite *KeeperTestSuite) TestQueryPacketCommitments() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.PacketCommitments(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.PacketCommitments(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -893,7 +901,8 @@ func (suite *KeeperTestSuite) TestQueryPacketReceipt() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.PacketReceipt(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.PacketReceipt(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -995,7 +1004,8 @@ func (suite *KeeperTestSuite) TestQueryPacketAcknowledgement() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.PacketAcknowledgement(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.PacketAcknowledgement(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1117,7 +1127,8 @@ func (suite *KeeperTestSuite) TestQueryPacketAcknowledgements() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.PacketAcknowledgements(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.PacketAcknowledgements(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1348,7 +1359,8 @@ func (suite *KeeperTestSuite) TestQueryUnreceivedPackets() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.UnreceivedPackets(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.UnreceivedPackets(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1482,7 +1494,8 @@ func (suite *KeeperTestSuite) TestQueryUnreceivedAcks() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.UnreceivedAcks(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.UnreceivedAcks(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1586,7 +1599,8 @@ func (suite *KeeperTestSuite) TestQueryNextSequenceReceive() {
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
 
-			res, err := suite.chainA.QueryServer.NextSequenceReceive(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.NextSequenceReceive(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1691,7 +1705,8 @@ func (suite *KeeperTestSuite) TestQueryNextSequenceSend() {
 
 			tc.malleate()
 			ctx := suite.chainA.GetContext()
-			res, err := suite.chainA.QueryServer.NextSequenceSend(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.NextSequenceSend(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1776,7 +1791,8 @@ func (suite *KeeperTestSuite) TestQueryUpgradeError() {
 			tc.malleate()
 
 			ctx := suite.chainA.GetContext()
-			res, err := suite.chainA.QueryServer.UpgradeError(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.UpgradeError(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1876,7 +1892,8 @@ func (suite *KeeperTestSuite) TestQueryUpgrade() {
 			tc.malleate()
 
 			ctx := suite.chainA.GetContext()
-			res, err := suite.chainA.QueryServer.Upgrade(ctx, req)
+			queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+			res, err := queryServer.Upgrade(ctx, req)
 
 			if tc.expPass {
 				suite.Require().NoError(err)
@@ -1892,6 +1909,7 @@ func (suite *KeeperTestSuite) TestQueryUpgrade() {
 func (suite *KeeperTestSuite) TestQueryChannelParams() {
 	ctx := suite.chainA.GetContext()
 	expParams := types.DefaultParams()
-	res, _ := suite.chainA.QueryServer.ChannelParams(ctx, &types.QueryChannelParamsRequest{})
+	queryServer := keeper.NewQueryServer(suite.chainA.App.GetIBCKeeper().ChannelKeeper)
+	res, _ := queryServer.ChannelParams(ctx, &types.QueryChannelParamsRequest{})
 	suite.Require().Equal(&expParams, res.Params)
 }

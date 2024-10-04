@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	govtypesv1 "cosmossdk.io/x/gov/types/v1"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypesv1 "cosmossdk.io/x/gov/types/v1"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
@@ -140,7 +140,10 @@ func (endpoint *Endpoint) UpdateClient() (err error) {
 
 	switch endpoint.ClientConfig.GetClientType() {
 	case exported.Tendermint:
-		header, err = endpoint.Chain.ConstructUpdateTMClientHeader(endpoint.Counterparty.Chain, endpoint.ClientID)
+		tmClientState, ok := endpoint.GetClientState().(*ibctm.ClientState)
+		require.True(endpoint.Chain.TB, ok)
+		trustedHeight := tmClientState.LatestHeight
+		header, err = endpoint.Chain.IBCClientHeader(endpoint.Counterparty.Chain.LastHeader, trustedHeight)
 
 	default:
 		err = fmt.Errorf("client type %s is not supported", endpoint.ClientConfig.GetClientType())
@@ -606,7 +609,7 @@ func (endpoint *Endpoint) ChanUpgradeInit() error {
 		endpoint.ChannelID,
 		"upgrade-init",
 		fmt.Sprintf("gov proposal for initialising channel upgrade: %s", endpoint.ChannelID),
-		false,
+		govtypesv1.ProposalType_PROPOSAL_TYPE_EXPEDITED,
 	)
 	require.NoError(endpoint.Chain.TB, err)
 

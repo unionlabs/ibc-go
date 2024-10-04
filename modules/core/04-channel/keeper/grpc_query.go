@@ -21,7 +21,20 @@ import (
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 )
 
-var _ types.QueryServer = (*Keeper)(nil)
+var _ types.QueryServer = (*queryServer)(nil)
+
+// queryServer implements the 04-channel types.QueryServer interface.
+// It embeds the channel keeper to leverage store access while limiting the api of the channel keeper.
+type queryServer struct {
+	*Keeper
+}
+
+// NewQueryServer returns a new 04-channel types.QueryServer implementation.
+func NewQueryServer(k *Keeper) types.QueryServer {
+	return &queryServer{
+		Keeper: k,
+	}
+}
 
 // Channel implements the Query/Channel gRPC method
 func (k Keeper) Channel(c context.Context, req *types.QueryChannelRequest) (*types.QueryChannelResponse, error) {

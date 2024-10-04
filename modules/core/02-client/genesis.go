@@ -12,7 +12,7 @@ import (
 
 // InitGenesis initializes the ibc client submodule's state from a provided genesis
 // state.
-func InitGenesis(ctx context.Context, k keeper.Keeper, gs types.GenesisState) error {
+func InitGenesis(ctx context.Context, k *keeper.Keeper, gs types.GenesisState) error {
 	if err := gs.Params.Validate(); err != nil {
 		panic(fmt.Errorf("invalid ibc client genesis state parameters: %v", err))
 	}
@@ -60,7 +60,7 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, gs types.GenesisState) er
 }
 
 // ExportGenesis returns the ibc client submodule's exported genesis.
-func ExportGenesis(ctx context.Context, k keeper.Keeper) (types.GenesisState, error) {
+func ExportGenesis(ctx context.Context, k *keeper.Keeper) (types.GenesisState, error) {
 	genClients := k.GetAllGenesisClients(ctx)
 	clientsMetadata, err := k.GetAllClientMetadata(ctx, genClients)
 	if err != nil {

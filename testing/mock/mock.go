@@ -56,8 +56,7 @@ var (
 )
 
 var (
-	_ module.AppModuleBasic = (*AppModuleBasic)(nil)
-	_ appmodule.AppModule   = (*AppModule)(nil)
+	_ appmodule.AppModule = (*AppModule)(nil)
 
 	_ porttypes.IBCModule = (*IBCModule)(nil)
 )

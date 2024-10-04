@@ -23,7 +23,20 @@ import (
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
 )
 
-var _ types.QueryServer = (*Keeper)(nil)
+var _ types.QueryServer = (*queryServer)(nil)
+
+// queryServer implements the 02-client types.QueryServer interface.
+// It embeds the client keeper to leverage store access while limiting the api of the client keeper.
+type queryServer struct {
+	*Keeper
+}
+
+// NewQueryServer returns a new 02-client types.QueryServer implementation.
+func NewQueryServer(k *Keeper) types.QueryServer {
+	return &queryServer{
+		Keeper: k,
+	}
+}
 
 // ClientState implements the Query/ClientState gRPC method
 func (k Keeper) ClientState(c context.Context, req *types.QueryClientStateRequest) (*types.QueryClientStateResponse, error) {

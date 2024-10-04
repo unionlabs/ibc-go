@@ -165,7 +165,10 @@ func (suite *AnteTestSuite) createUpdateClientMessage() sdk.Msg {
 
 	switch endpoint.ClientConfig.GetClientType() {
 	case exported.Tendermint:
-		header, _ = endpoint.Chain.ConstructUpdateTMClientHeader(endpoint.Counterparty.Chain, endpoint.ClientID)
+		tmClientState, ok := suite.path.EndpointB.GetClientState().(*ibctm.ClientState)
+		suite.Require().True(ok)
+		trustedHeight := tmClientState.LatestHeight
+		header, _ = endpoint.Chain.IBCClientHeader(endpoint.Counterparty.Chain.LastHeader, trustedHeight)
 
 	default:
 	}
@@ -396,7 +399,7 @@ func (suite *AnteTestSuite) TestAnteDecoratorCheckTx() {
 			func(suite *AnteTestSuite) []sdk.Msg {
 				trustedHeight := suite.path.EndpointB.GetClientState().GetLatestHeight().(clienttypes.Height)
 
-				trustedVals, found := suite.chainA.GetValsAtHeight(int64(trustedHeight.RevisionHeight) + 1)
+				trustedVals, found := suite.chainA.TrustedValidators[trustedHeight.RevisionHeight]
 				suite.Require().True(found)
 
 				err := suite.path.EndpointB.UpdateClient()

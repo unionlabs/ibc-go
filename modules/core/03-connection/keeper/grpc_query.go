@@ -18,7 +18,20 @@ import (
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 )
 
-var _ types.QueryServer = (*Keeper)(nil)
+var _ types.QueryServer = (*queryServer)(nil)
+
+// queryServer implements the 03-connection types.QueryServer interface.
+// It embeds the connection keeper to leverage store access while limiting the api of the connection keeper.
+type queryServer struct {
+	*Keeper
+}
+
+// NewQueryServer returns a new 03-connection types.QueryServer implementation.
+func NewQueryServer(k *Keeper) types.QueryServer {
+	return &queryServer{
+		Keeper: k,
+	}
+}
 
 // Connection implements the Query/Connection gRPC method
 func (k Keeper) Connection(c context.Context, req *types.QueryConnectionRequest) (*types.QueryConnectionResponse, error) {

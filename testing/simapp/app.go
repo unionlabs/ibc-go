@@ -461,7 +461,7 @@ func NewSimApp(
 	govRouter := govv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(*app.IBCKeeper.ClientKeeper))
 	govConfig := govkeeper.DefaultConfig()
 	/*
 		Example of setting gov params:
@@ -646,7 +646,7 @@ func NewSimApp(
 
 		// IBC modules
 		ibc.NewAppModule(appCodec, app.IBCKeeper),
-		transfer.NewAppModule(app.TransferKeeper),
+		transfer.NewAppModule(appCodec, app.TransferKeeper),
 		ibcfee.NewAppModule(appCodec, app.IBCFeeKeeper),
 		ica.NewAppModule(appCodec, &app.ICAControllerKeeper, &app.ICAHostKeeper),
 		ibctm.NewAppModule(),

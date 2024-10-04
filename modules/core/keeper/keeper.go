@@ -18,16 +18,15 @@ import (
 	portkeeper "github.com/cosmos/ibc-go/v8/modules/core/05-port/keeper"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	"github.com/cosmos/ibc-go/v8/modules/core/types"
-	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 )
 
 // Keeper defines each ICS keeper for IBC
 type Keeper struct {
 	cdc codec.BinaryCodec
 
-	ClientKeeper     clientkeeper.Keeper
-	ConnectionKeeper connectionkeeper.Keeper
-	ChannelKeeper    channelkeeper.Keeper
+	ClientKeeper     *clientkeeper.Keeper
+	ConnectionKeeper *connectionkeeper.Keeper
+	ChannelKeeper    *channelkeeper.Keeper
 	PortKeeper       *portkeeper.Keeper
 	Router           *porttypes.Router
 
@@ -61,18 +60,14 @@ func NewKeeper(
 	portKeeper := portkeeper.NewKeeper(scopedKeeper)
 	channelKeeper := channelkeeper.NewKeeper(cdc, storeService, clientKeeper, connectionKeeper, &portKeeper, scopedKeeper)
 
-	keeper := &Keeper{
+	return &Keeper{
 		cdc:              cdc,
-		ClientKeeper:     clientKeeper,
-		ConnectionKeeper: connectionKeeper,
-		ChannelKeeper:    channelKeeper,
+		ClientKeeper:     &clientKeeper,
+		ConnectionKeeper: &connectionKeeper,
+		ChannelKeeper:    &channelKeeper,
 		PortKeeper:       &portKeeper,
 		authority:        authority,
 	}
-
-	keeper.SetConsensusHost(ibctm.NewConsensusHost(stakingKeeper))
-
-	return keeper
 }
 
 // Codec returns the IBC module codec.

@@ -25,6 +25,9 @@ var (
 // a no-op.
 type AppModuleBasic struct{}
 
+// IsOnePerModuleType implements the depinject.OnePerModuleType interface.
+func (AppModuleBasic) IsOnePerModuleType() {}
+
 // IsAppModule implements the appmodule.AppModule interface.
 func (AppModuleBasic) IsAppModule() {}
 
@@ -74,7 +77,6 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule is the application module for the Solomachine client module
 type AppModule struct {
 	AppModuleBasic
-	lightClientModule LightClientModule
 }
 
 // NewAppModule creates a new Solomachine client module
