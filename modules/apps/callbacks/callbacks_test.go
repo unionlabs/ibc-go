@@ -12,9 +12,9 @@ import (
 	"cosmossdk.io/log"
 	sdkmath "cosmossdk.io/math"
 
+	banktypes "cosmossdk.io/x/bank/types"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	banktypes "cosmossdk.io/x/bank/types"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
@@ -312,7 +312,7 @@ func GetExpectedEvent(
 		return abci.Event{}, false
 	}
 
-	newCtx := context.Context{}.WithEventManager(sdk.NewEventManager())
+	newCtx := sdk.Context{}.WithEventManager(sdk.NewEventManager())
 	types.EmitCallbackEvent(newCtx, eventPortID, eventChannelID, seq, callbackType, callbackData, expError)
 	return newCtx.EventManager().Events().ToABCIEvents()[0], true
 }

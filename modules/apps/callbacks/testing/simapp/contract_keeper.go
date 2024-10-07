@@ -46,17 +46,56 @@ type ContractKeeper struct {
 	key storetypes.StoreKey
 
 	Counters map[callbacktypes.CallbackType]int
+
+	IBCSendPacketCallbackFn func(
+		cachedCtx sdk.Context,
+		sourcePort string,
+		sourceChannel string,
+		timeoutHeight clienttypes.Height,
+		timeoutTimestamp uint64,
+		packetData []byte,
+		contractAddress,
+		packetSenderAddress string,
+		version string,
+	) error
+
+	IBCOnAcknowledgementPacketCallbackFn func(
+		cachedCtx sdk.Context,
+		packet channeltypes.Packet,
+		acknowledgement []byte,
+		relayer sdk.AccAddress,
+		contractAddress,
+		packetSenderAddress string,
+		version string,
+	) error
+
+	IBCOnTimeoutPacketCallbackFn func(
+		cachedCtx sdk.Context,
+		packet channeltypes.Packet,
+		relayer sdk.AccAddress,
+		contractAddress,
+		packetSenderAddress string,
+		version string,
+	) error
+
+	IBCReceivePacketCallbackFn func(
+		cachedCtx sdk.Context,
+		packet ibcexported.PacketI,
+		ack ibcexported.Acknowledgement,
+		contractAddress string,
+		version string,
+	) error
 }
 
 // SetStateEntryCounter sets state entry counter. The number of stateful
 // entries is tracked as a uint8. This function is used to test state reversals.
-func (k ContractKeeper) SetStateEntryCounter(ctx context.Context, count uint8) {
+func (k ContractKeeper) SetStateEntryCounter(ctx sdk.Context, count uint8) {
 	store := ctx.KVStore(k.key)
 	store.Set([]byte(StatefulCounterKey), []byte{count})
 }
 
 // GetStateEntryCounter returns the state entry counter stored in state.
-func (k ContractKeeper) GetStateEntryCounter(ctx context.Context) uint8 {
+func (k ContractKeeper) GetStateEntryCounter(ctx sdk.Context) uint8 {
 	store := ctx.KVStore(k.key)
 	bz := store.Get([]byte(StatefulCounterKey))
 	if bz == nil {
@@ -66,17 +105,35 @@ func (k ContractKeeper) GetStateEntryCounter(ctx context.Context) uint8 {
 }
 
 // IncrementStatefulCounter increments the stateful callback counter in state.
-func (k ContractKeeper) IncrementStateEntryCounter(ctx context.Context) {
+func (k ContractKeeper) IncrementStateEntryCounter(ctx sdk.Context) {
 	count := k.GetStateEntryCounter(ctx)
 	k.SetStateEntryCounter(ctx, count+1)
 }
 
 // NewKeeper creates a new mock ContractKeeper.
-func NewContractKeeper(key storetypes.StoreKey) ContractKeeper {
-	return ContractKeeper{
+func NewContractKeeper(key storetypes.StoreKey) *ContractKeeper {
+	k := &ContractKeeper{
 		key:      key,
 		Counters: make(map[callbacktypes.CallbackType]int),
 	}
+
+	k.IBCSendPacketCallbackFn = func(ctx sdk.Context, _, _ string, _ clienttypes.Height, _ uint64, _ []byte, contractAddress, _, _ string) error {
+		return k.ProcessMockCallback(ctx, callbacktypes.CallbackTypeSendPacket, contractAddress)
+	}
+
+	k.IBCOnAcknowledgementPacketCallbackFn = func(ctx sdk.Context, _ channeltypes.Packet, _ []byte, _ sdk.AccAddress, contractAddress, _, _ string) error {
+		return k.ProcessMockCallback(ctx, callbacktypes.CallbackTypeAcknowledgementPacket, contractAddress)
+	}
+
+	k.IBCOnTimeoutPacketCallbackFn = func(ctx sdk.Context, _ channeltypes.Packet, _ sdk.AccAddress, contractAddress, _, _ string) error {
+		return k.ProcessMockCallback(ctx, callbacktypes.CallbackTypeTimeoutPacket, contractAddress)
+	}
+
+	k.IBCReceivePacketCallbackFn = func(ctx sdk.Context, _ ibcexported.PacketI, _ ibcexported.Acknowledgement, contractAddress, _ string) error {
+		return k.ProcessMockCallback(ctx, callbacktypes.CallbackTypeReceivePacket, contractAddress)
+	}
+
+	return k
 }
 
 // IBCPacketSendCallback increments the stateful entry counter and the send_packet callback counter.
@@ -87,7 +144,7 @@ func NewContractKeeper(key storetypes.StoreKey) ContractKeeper {
 //   - Panics and consumes half the remaining gas if the contract address is PanicContract
 //   - returns nil and consumes half the remaining gas if the contract address is SuccessContract or any other value
 func (k ContractKeeper) IBCSendPacketCallback(
-	ctx context.Context,
+	ctx sdk.Context,
 	sourcePort string,
 	sourceChannel string,
 	timeoutHeight clienttypes.Height,
@@ -107,7 +164,7 @@ func (k ContractKeeper) IBCSendPacketCallback(
 //   - Panics and consumes half the remaining gas if the contract address is PanicContract
 //   - returns nil and consumes half the remaining gas if the contract address is SuccessContract or any other value
 func (k ContractKeeper) IBCOnAcknowledgementPacketCallback(
-	ctx context.Context,
+	ctx sdk.Context,
 	packet channeltypes.Packet,
 	acknowledgement []byte,
 	relayer sdk.AccAddress,
@@ -125,7 +182,7 @@ func (k ContractKeeper) IBCOnAcknowledgementPacketCallback(
 //   - Panics and consumes half the remaining gas if the contract address is PanicContract
 //   - returns nil and consumes half the remaining gas if the contract address is SuccessContract or any other value
 func (k ContractKeeper) IBCOnTimeoutPacketCallback(
-	ctx context.Context,
+	ctx sdk.Context,
 	packet channeltypes.Packet,
 	relayer sdk.AccAddress,
 	contractAddress,
@@ -142,7 +199,7 @@ func (k ContractKeeper) IBCOnTimeoutPacketCallback(
 //   - Panics and consumes half the remaining gas if the contract address is PanicContract
 //   - returns nil and consumes half the remaining gas if the contract address is SuccessContract or any other value
 func (k ContractKeeper) IBCReceivePacketCallback(
-	ctx context.Context,
+	ctx sdk.Context,
 	packet ibcexported.PacketI,
 	ack ibcexported.Acknowledgement,
 	contractAddress string,
@@ -159,7 +216,7 @@ func (k ContractKeeper) IBCReceivePacketCallback(
 //   - Panics and consumes half the remaining gas if the contract address is PanicContract
 //   - returns nil and consumes half the remaining gas if the contract address is SuccessContract or any other value
 func (k ContractKeeper) processMockCallback(
-	ctx context.Context,
+	ctx sdk.Context,
 	callbackType callbacktypes.CallbackType,
 	contractAddress string,
 ) (err error) {

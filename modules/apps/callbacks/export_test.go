@@ -13,8 +13,8 @@ import (
 
 // ProcessCallback is a wrapper around processCallback to allow the function to be directly called in tests.
 func (im IBCMiddleware) ProcessCallback(
-	ctx context.Context, callbackType types.CallbackType,
-	callbackData types.CallbackData, callbackExecutor func(context.Context) error,
+	ctx sdk.Context, callbackType types.CallbackType,
+	callbackData types.CallbackData, callbackExecutor func(sdk.Context) error,
 ) error {
 	return im.processCallback(ctx, callbackType, callbackData, callbackExecutor)
 }

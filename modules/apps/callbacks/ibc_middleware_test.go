@@ -226,7 +226,7 @@ func (s *CallbacksTestSuite) TestOnAcknowledgementPacket() {
 		packetData   transfertypes.FungibleTokenPacketData
 		packet       channeltypes.Packet
 		ack          []byte
-		ctx          context.Context
+		ctx          sdk.Context
 		userGasLimit uint64
 	)
 
@@ -387,7 +387,7 @@ func (s *CallbacksTestSuite) TestOnTimeoutPacket() {
 	var (
 		packetData transfertypes.FungibleTokenPacketData
 		packet     channeltypes.Packet
-		ctx        context.Context
+		ctx        sdk.Context
 	)
 
 	testCases := []struct {
@@ -549,7 +549,7 @@ func (s *CallbacksTestSuite) TestOnRecvPacket() {
 	var (
 		packetData   transfertypes.FungibleTokenPacketData
 		packet       channeltypes.Packet
-		ctx          context.Context
+		ctx          sdk.Context
 		userGasLimit uint64
 	)
 
@@ -703,7 +703,7 @@ func (s *CallbacksTestSuite) TestWriteAcknowledgement() {
 	var (
 		packetData transfertypes.FungibleTokenPacketData
 		packet     channeltypes.Packet
-		ctx        context.Context
+		ctx        sdk.Context
 		ack        ibcexported.Acknowledgement
 	)
 
@@ -802,8 +802,8 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 	var (
 		callbackType     types.CallbackType
 		callbackData     types.CallbackData
-		ctx              context.Context
-		callbackExecutor func(context.Context) error
+		ctx              sdk.Context
+		callbackExecutor func(sdk.Context) error
 		expGasConsumed   uint64
 	)
 
@@ -824,7 +824,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 		{
 			"success: callbackExecutor panic, but not out of gas",
 			func() {
-				callbackExecutor = func(cachedCtx context.Context) error {
+				callbackExecutor = func(cachedCtx sdk.Context) error {
 					cachedCtx.GasMeter().ConsumeGas(expGasConsumed, "callbackExecutor gas consumption")
 					panic("callbackExecutor panic")
 				}
@@ -837,7 +837,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 			func() {
 				executionGas := callbackData.ExecutionGasLimit
 				expGasConsumed = executionGas
-				callbackExecutor = func(cachedCtx context.Context) error { //nolint:unparam
+				callbackExecutor = func(cachedCtx sdk.Context) error { //nolint:unparam
 					cachedCtx.GasMeter().ConsumeGas(expGasConsumed+1, "callbackExecutor gas consumption")
 					return nil
 				}
@@ -848,7 +848,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 		{
 			"failure: callbackExecutor error",
 			func() {
-				callbackExecutor = func(cachedCtx context.Context) error {
+				callbackExecutor = func(cachedCtx sdk.Context) error {
 					cachedCtx.GasMeter().ConsumeGas(expGasConsumed, "callbackExecutor gas consumption")
 					return callbackError
 				}
@@ -860,7 +860,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 			"failure: callbackExecutor panic, not out of gas, and SendPacket",
 			func() {
 				callbackType = types.CallbackTypeSendPacket
-				callbackExecutor = func(cachedCtx context.Context) error {
+				callbackExecutor = func(cachedCtx sdk.Context) error {
 					cachedCtx.GasMeter().ConsumeGas(expGasConsumed, "callbackExecutor gas consumption")
 					panic("callbackExecutor panic")
 				}
@@ -874,7 +874,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 				executionGas := callbackData.ExecutionGasLimit
 				callbackData.CommitGasLimit = executionGas + 1
 				expGasConsumed = executionGas
-				callbackExecutor = func(cachedCtx context.Context) error { //nolint:unparam
+				callbackExecutor = func(cachedCtx sdk.Context) error { //nolint:unparam
 					cachedCtx.GasMeter().ConsumeGas(executionGas+1, "callbackExecutor oog panic")
 					return nil
 				}
@@ -906,7 +906,7 @@ func (s *CallbacksTestSuite) TestProcessCallback() {
 			ctx = s.chainB.GetContext()
 
 			// set a callback executor that will always succeed after consuming expGasConsumed
-			callbackExecutor = func(cachedCtx context.Context) error { //nolint:unparam
+			callbackExecutor = func(cachedCtx sdk.Context) error { //nolint:unparam
 				cachedCtx.GasMeter().ConsumeGas(expGasConsumed, "callbackExecutor gas consumption")
 				return nil
 			}
