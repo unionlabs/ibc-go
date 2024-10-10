@@ -41,7 +41,7 @@ require (
 	cosmossdk.io/x/params v0.0.0-00010101000000-000000000000
 	cosmossdk.io/x/slashing v0.0.0-00010101000000-000000000000
 	cosmossdk.io/x/staking v0.0.0-00010101000000-000000000000
-	cosmossdk.io/x/tx v0.13.4
+	cosmossdk.io/x/tx v0.13.4 // main
 	cosmossdk.io/x/upgrade v0.1.4
 	github.com/CosmWasm/wasmvm/v2 v2.1.2
 	github.com/cometbft/cometbft v1.0.0-rc1.0.20240908111210-ab0be101882f
@@ -256,7 +256,7 @@ require (
 replace (
 	cosmossdk.io/api => cosmossdk.io/api v0.7.3-0.20240924065902-eb7653cfecdf
 	cosmossdk.io/client/v2 => github.com/unionlabs/cosmos-sdk-union/client/v2 v2.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/core => cosmossdk.io/core v1.0.0-alpha.1
+	cosmossdk.io/core => cosmossdk.io/core v1.0.0-alpha.4
 	cosmossdk.io/store => cosmossdk.io/store v1.0.0-rc.0.0.20240906090851-36d9b25e8981
 	cosmossdk.io/upgrade => github.com/unionlabs/cosmos-sdk-union/client/v2 v2.0.0-20241009174353-cb4ef3142d00
 	cosmossdk.io/x/accounts => github.com/unionlabs/cosmos-sdk-union/x/accounts v0.0.0-20241009174353-cb4ef3142d00
@@ -278,6 +278,7 @@ replace (
 	cosmossdk.io/x/protocolpool => github.com/unionlabs/cosmos-sdk-union/x/protocolpool v0.0.0-20241009174353-cb4ef3142d00
 	cosmossdk.io/x/slashing => github.com/unionlabs/cosmos-sdk-union/x/slashing v0.0.0-20241009174353-cb4ef3142d00
 	cosmossdk.io/x/staking => github.com/unionlabs/cosmos-sdk-union/x/staking v0.0.0-20241009174353-cb4ef3142d00
+	cosmossdk.io/x/tx => cosmossdk.io/x/tx v0.13.4-0.20241003111526-30003f667944
 	cosmossdk.io/x/upgrade => github.com/unionlabs/cosmos-sdk-union/x/upgrade v0.0.0-20241009174353-cb4ef3142d00
 
 	github.com/cometbft/cometbft => github.com/unionlabs/cometbft v0.0.0-20241009165438-d82e5fece358

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"bytes"
+	"context"
 	"encoding/hex"
 
 	wasmvm "github.com/CosmWasm/wasmvm/v2"
@@ -40,10 +41,11 @@ func (k Keeper) GetAuthority() string {
 	return k.authority
 }
 
-func (Keeper) storeWasmCode(ctx sdk.Context, code []byte, storeFn func(code wasmvm.WasmCode, gasLimit uint64) (wasmvm.Checksum, uint64, error)) ([]byte, error) {
+func (Keeper) storeWasmCode(ctx context.Context, code []byte, storeFn func(code wasmvm.WasmCode, gasLimit uint64) (wasmvm.Checksum, uint64, error)) ([]byte, error) {
 	var err error
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	if types.IsGzip(code) {
-		ctx.GasMeter().ConsumeGas(types.VMGasRegister.UncompressCosts(len(code)), "Uncompress gzip bytecode")
+		sdkCtx.GasMeter().ConsumeGas(types.VMGasRegister.UncompressCosts(len(code)), "Uncompress gzip bytecode")
 		code, err = types.Uncompress(code, types.MaxWasmByteSize())
 		if err != nil {
 			return nil, errorsmod.Wrap(err, "failed to store contract")
@@ -66,9 +68,9 @@ func (Keeper) storeWasmCode(ctx sdk.Context, code []byte, storeFn func(code wasm
 	}
 
 	// create the code in the vm
-	gasLeft := types.VMGasRegister.RuntimeGasForContract(ctx)
+	gasLeft := types.VMGasRegister.RuntimeGasForContract(sdkCtx)
 	vmChecksum, gasUsed, err := storeFn(code, gasLeft)
-	types.VMGasRegister.ConsumeRuntimeGas(ctx, gasUsed)
+	types.VMGasRegister.ConsumeRuntimeGas(sdkCtx, gasUsed)
 	if err != nil {
 		return nil, errorsmod.Wrap(err, "failed to store contract")
 	}

@@ -33,6 +33,12 @@ import (
 	upgradekeeper "cosmossdk.io/x/upgrade/keeper"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 
+	"cosmossdk.io/x/authz"
+	authzkeeper "cosmossdk.io/x/authz/keeper"
+	authzmodule "cosmossdk.io/x/authz/module"
+	"cosmossdk.io/x/bank"
+	bankkeeper "cosmossdk.io/x/bank/keeper"
+	banktypes "cosmossdk.io/x/bank/types"
 	"cosmossdk.io/x/consensus"
 	consensusparamkeeper "cosmossdk.io/x/consensus/keeper"
 	consensusparamtypes "cosmossdk.io/x/consensus/types"
@@ -91,12 +97,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	"cosmossdk.io/x/authz"
-	authzkeeper "cosmossdk.io/x/authz/keeper"
-	authzmodule "cosmossdk.io/x/authz/module"
-	"cosmossdk.io/x/bank"
-	bankkeeper "cosmossdk.io/x/bank/keeper"
-	banktypes "cosmossdk.io/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
@@ -819,7 +819,7 @@ func NewSimApp(
 
 		// Initialize pinned codes in wasmvm as they are not persisted there
 		if err := wasmkeeper.InitializePinnedCodes(ctx); err != nil {
-			panic!(fmt.Errorf("failed initialize pinned codes %s", err))
+			panic(fmt.Errorf("failed initialize pinned codes %s", err))
 		}
 	}
 
