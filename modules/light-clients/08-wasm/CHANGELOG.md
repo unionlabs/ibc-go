@@ -38,12 +38,9 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### Dependencies
 
-* [\#6828](https://github.com/cosmos/ibc-go/pull/6828) Bump Cosmos SDK to v0.50.9.
-* [\#6848](https://github.com/cosmos/ibc-go/pull/6848) Bump CometBFT to v0.38.10.
+* [\#7114](https://github.com/cosmos/ibc-go/pull/7114) Bump WasmVM to v2.1.2.
 
 ### API Breaking
-
-* [\#6937](https://github.com/cosmos/ibc-go/pull/6937) Remove `WasmConsensusHost` implementation of the `ConsensusHost` interface.
 
 ### State Machine Breaking
 
@@ -55,10 +52,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 <!-- markdown-link-check-disable-next-line -->
 ## [v0.4.1+ibc-go-v8.4-wasmvm-v2.0](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.4.1%2Bibc-go-v8.4-wasmvm-v2.0) - 2024-07-31
-
-### Dependencies
-
-* [\#6992](https://github.com/cosmos/ibc-go/pull/6992) Bump ibc-go to v8.4.0 and CosmosSDK to v0.50.7.
 
 ### API Breaking
 
@@ -88,32 +81,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 * [\#6815](https://github.com/cosmos/ibc-go/pull/6815) Decode to bytes the hex-encoded checksum argument of the `migrate-contract` CLI. 
 
 <!-- markdown-link-check-disable-next-line -->
-## [v0.3.1+ibc-go-v7.4-wasmvm-v1.5](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.3.1%2Bibc-go-v7.4-wasmvm-v1.5) - 2024-07-31
-
-### Dependencies
-
-* [\#6996](https://github.com/cosmos/ibc-go/pull/6992) Bump ibc-go to v7.4.0, CosmosSDK to v0.47.8 and CometBFT to v0.37.4.
-
-### API Breaking
-
-* [\#6923](https://github.com/cosmos/ibc-go/pull/6923) The JSON message API for `VerifyMembershipMsg` and `VerifyNonMembershipMsg` payloads for client contract `SudoMsg` has been updated. The field `path` has been changed to `merkle_path`. This change requires updates to 08-wasm client contracts for integration.
-
-<!-- markdown-link-check-disable-next-line -->
-## [v0.2.0+ibc-go-v7.3-wasmvm-v1.5](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.2.0%2Bibc-go-v7.3-wasmvm-v1.5) - 2024-07-17
-
-### API Breaking
-
-* [\#6644](https://github.com/cosmos/ibc-go/pull/6644) Add `v2.MerklePath` for contract api `VerifyMembershipMsg` and `VerifyNonMembershipMsg` structs. Note, this requires a migration for existing client contracts to correctly handle deserialization of `MerklePath.KeyPath` which has changed from `[]string` to `[][]byte`. In JSON message structures this change is reflected as the `KeyPath` being a marshalled as a list of base64 encoded byte strings. This change supports proving values stored under keys which contain non-utf8 encoded symbols. See migration docs for more details.
-
-### Features
-
-* [#\6231](https://github.com/cosmos/ibc-go/pull/6231) feat: add CLI to broadcast transaction with `MsgMigrateContract`.
-
-### Bug Fixes
-
-* [\#6815](https://github.com/cosmos/ibc-go/pull/6815) Decode to bytes the hex-encoded checksum argument of the `migrate-contract` CLI. 
-
-<!-- markdown-link-check-disable-next-line -->
 ## [v0.2.0+ibc-go-v8.3-wasmvm-v2.0](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.2.0%2Bibc-go-v8.3-wasmvm-v2.0) - 2024-05-23
 
 ### Dependencies
@@ -126,17 +93,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 * [\#5821](https://github.com/cosmos/ibc-go/pull/5821) feat: add `VerifyMembershipProof` RPC query (querier approach for conditional clients).
 * [\#6231](https://github.com/cosmos/ibc-go/pull/6231) feat: add CLI to broadcast transaction with `MsgMigrateContract`.
-
-<!-- markdown-link-check-disable-next-line -->
-## [v0.1.1+ibc-go-v7.3-wasmvm-v1.5](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.1.1%2Bibc-go-v7.3-wasmvm-v1.5) - 2024-04-12
-
-### Dependencies
-
-* [\#6149](https://github.com/cosmos/ibc-go/pull/6149) Bump wasmvm to v1.5.2.
-
-### Bug Fixes
-
-* (cli) [\#5610](https://github.com/cosmos/ibc-go/pull/5610) Register wasm tx cli.
 
 <!-- markdown-link-check-disable-next-line -->
 ## [v0.1.0+ibc-go-v8.0-wasmvm-v1.5](https://github.com/cosmos/ibc-go/releases/tag/modules%2Flight-clients%2F08-wasm%2Fv0.1.0%2Bibc-go-v7.3-wasmvm-v1.5) - 2023-12-18
