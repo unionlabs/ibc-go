@@ -87,7 +87,7 @@ func (AppModule) IsAppModule() {}
 func (AppModuleBasic) RegisterLegacyAminoCodec(registrar registry.AminoRegistrar) {}
 
 // RegisterInterfaces implements AppModuleBasic interface.
-func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {}
+func (AppModuleBasic) RegisterInterfaces(registry registry.InterfaceRegistrar) {}
 
 // DefaultGenesis implements AppModuleBasic interface.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {

@@ -22,7 +22,7 @@ func RegisterLegacyAminoCodec(registrar registry.AminoRegistrar) {
 
 // RegisterInterfaces register the 29-fee module interfaces to protobuf
 // Any.
-func RegisterInterfaces(registry codectypes.InterfaceRegistry) {
+func RegisterInterfaces(registry registry.InterfaceRegistrar) {
 	registry.RegisterImplementations(
 		(*sdk.Msg)(nil),
 		&MsgPayPacketFee{},
