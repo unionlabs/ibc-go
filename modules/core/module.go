@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"cosmossdk.io/core/appmodule"
+	"cosmossdk.io/core/registry"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -60,7 +61,7 @@ func (AppModule) IsOnePerModuleType() {}
 func (AppModule) IsAppModule() {}
 
 // RegisterLegacyAminoCodec does nothing. IBC does not support amino.
-func (AppModuleBasic) RegisterLegacyAminoCodec(*codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(registrar registry.AminoRegistrar) {}
 
 // DefaultGenesis returns default genesis state as raw bytes for the ibc
 // module.

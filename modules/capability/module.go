@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"cosmossdk.io/core/appmodule"
+	"cosmossdk.io/core/registry"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -52,7 +53,7 @@ func (AppModule) Name() string {
 }
 
 // RegisterLegacyAminoCodec does nothing. Capability does not support amino.
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(registrar registry.AminoRegistrar) {}
 
 // RegisterInterfaces registers the module's interface types
 func (AppModuleBasic) RegisterInterfaces(_ cdctypes.InterfaceRegistry) {}

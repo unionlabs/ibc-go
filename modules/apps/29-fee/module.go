@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"cosmossdk.io/core/appmodule"
+	"cosmossdk.io/core/registry"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -49,8 +50,8 @@ func (AppModule) IsOnePerModuleType() {}
 func (AppModule) IsAppModule() {}
 
 // RegisterLegacyAminoCodec implements AppModuleBasic interface
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	types.RegisterLegacyAminoCodec(cdc)
+func (AppModuleBasic) RegisterLegacyAminoCodec(registrar registry.AminoRegistrar) {
+	types.RegisterLegacyAminoCodec(registrar)
 }
 
 // RegisterInterfaces registers module concrete types into protobuf Any.
