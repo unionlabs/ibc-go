@@ -130,7 +130,9 @@ func NewAppModule(pk PortKeeper) AppModule {
 func (AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {}
 
 // RegisterServices implements the AppModule interface.
-func (AppModule) RegisterServices(module.Configurator) {}
+func (AppModule) RegisterServices(module.Configurator) error {
+	return nil
+}
 
 // InitGenesis implements the AppModule interface.
 func (am AppModule) InitGenesis(ctx context.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
