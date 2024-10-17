@@ -5,7 +5,6 @@ package ibc.core.client.v1;
 option go_package = "github.com/cosmos/ibc-go/v8/modules/core/02-client/types";
 
 import "cosmos/msg/v1/msg.proto";
-import "cosmos/upgrade/v1beta1/upgrade.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "ibc/core/client/v1/client.proto";
@@ -139,7 +138,6 @@ message MsgRecoverClientResponse {}
 // MsgIBCSoftwareUpgrade defines the message used to schedule an upgrade of an IBC client using a v1 governance proposal
 message MsgIBCSoftwareUpgrade {
   option (cosmos.msg.v1.signer)    = "signer";
-  cosmos.upgrade.v1beta1.Plan plan = 1 [(gogoproto.nullable) = false];
   // An UpgradedClientState must be provided to perform an IBC breaking upgrade.
   // This will make the chain commit to the correct upgraded (self) client state
   // before the upgrade occurs, so that connecting chains can verify that the
