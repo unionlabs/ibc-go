@@ -4,7 +4,6 @@ package ibc.core.client.v1;
 
 option go_package = "github.com/cosmos/ibc-go/v8/modules/core/02-client/types";
 
-import "cosmos/upgrade/v1beta1/upgrade.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
@@ -101,7 +100,6 @@ message UpgradeProposal {
 
   string                      title       = 1;
   string                      description = 2;
-  cosmos.upgrade.v1beta1.Plan plan        = 3 [(gogoproto.nullable) = false];
 
   // An UpgradedClientState must be provided to perform an IBC breaking upgrade.
   // This will make the chain commit to the correct upgraded (self) client state
