@@ -244,34 +244,34 @@ require (
 // Cosmos SDK v0.52
 replace (
 	cosmossdk.io/api => cosmossdk.io/api v0.7.3-0.20240924065902-eb7653cfecdf
-	cosmossdk.io/client/v2 => github.com/unionlabs/cosmos-sdk-union/client/v2 v2.0.0-20241009174353-cb4ef3142d00
+	cosmossdk.io/client/v2 => github.com/unionlabs/cosmos-sdk-union/client/v2 f2d7915254595f2ad647c09a874c4bfabefa90fd
 	cosmossdk.io/core => cosmossdk.io/core v1.0.0-alpha.1
 	cosmossdk.io/store => cosmossdk.io/store v1.0.0-rc.0.0.20240906090851-36d9b25e8981
-	cosmossdk.io/upgrade => github.com/unionlabs/cosmos-sdk-union/client/v2 v2.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/accounts => github.com/unionlabs/cosmos-sdk-union/x/accounts v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/accounts/defaults/lockup => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/lockup v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/accounts/defaults/multisig => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/multisig v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/authz => github.com/unionlabs/cosmos-sdk-union/x/authz v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/bank => github.com/unionlabs/cosmos-sdk-union/x/bank v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/circuit => github.com/unionlabs/cosmos-sdk-union/x/circuit v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/consensus => github.com/unionlabs/cosmos-sdk-union/x/consensus v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/distribution => github.com/unionlabs/cosmos-sdk-union/x/distribution v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/epochs => github.com/unionlabs/cosmos-sdk-union/x/epochs v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/evidence => github.com/unionlabs/cosmos-sdk-union/x/evidence v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/feegrant => github.com/unionlabs/cosmos-sdk-union/x/feegrant v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/gov => github.com/unionlabs/cosmos-sdk-union/x/gov v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/group => github.com/unionlabs/cosmos-sdk-union/x/group v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/mint => github.com/unionlabs/cosmos-sdk-union/x/mint v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/nft => github.com/unionlabs/cosmos-sdk-union/x/nft v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/params => github.com/unionlabs/cosmos-sdk-union/x/params v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/protocolpool => github.com/unionlabs/cosmos-sdk-union/x/protocolpool v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/slashing => github.com/unionlabs/cosmos-sdk-union/x/slashing v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/staking => github.com/unionlabs/cosmos-sdk-union/x/staking v0.0.0-20241009174353-cb4ef3142d00
-	cosmossdk.io/x/upgrade => github.com/unionlabs/cosmos-sdk-union/x/upgrade v0.0.0-20241009174353-cb4ef3142d00
+	cosmossdk.io/upgrade => github.com/unionlabs/cosmos-sdk-union/client/v2 f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/accounts => github.com/unionlabs/cosmos-sdk-union/x/accounts f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/accounts/defaults/lockup => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/lockup f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/accounts/defaults/multisig => github.com/unionlabs/cosmos-sdk-union/x/accounts/defaults/multisig f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/authz => github.com/unionlabs/cosmos-sdk-union/x/authz f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/bank => github.com/unionlabs/cosmos-sdk-union/x/bank f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/circuit => github.com/unionlabs/cosmos-sdk-union/x/circuit f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/consensus => github.com/unionlabs/cosmos-sdk-union/x/consensus f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/distribution => github.com/unionlabs/cosmos-sdk-union/x/distribution f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/epochs => github.com/unionlabs/cosmos-sdk-union/x/epochs f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/evidence => github.com/unionlabs/cosmos-sdk-union/x/evidence f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/feegrant => github.com/unionlabs/cosmos-sdk-union/x/feegrant f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/gov => github.com/unionlabs/cosmos-sdk-union/x/gov f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/group => github.com/unionlabs/cosmos-sdk-union/x/group f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/mint => github.com/unionlabs/cosmos-sdk-union/x/mint f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/nft => github.com/unionlabs/cosmos-sdk-union/x/nft f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/params => github.com/unionlabs/cosmos-sdk-union/x/params f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/protocolpool => github.com/unionlabs/cosmos-sdk-union/x/protocolpool f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/slashing => github.com/unionlabs/cosmos-sdk-union/x/slashing f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/staking => github.com/unionlabs/cosmos-sdk-union/x/staking f2d7915254595f2ad647c09a874c4bfabefa90fd
+	cosmossdk.io/x/upgrade => github.com/unionlabs/cosmos-sdk-union/x/upgrade f2d7915254595f2ad647c09a874c4bfabefa90fd
 
 	github.com/cometbft/cometbft => github.com/unionlabs/cometbft v0.0.0-20241009165438-d82e5fece358
 	github.com/cometbft/cometbft/api => github.com/unionlabs/cometbft/api v0.0.0-20241009165438-d82e5fece358
 	github.com/consensys/gnark-crypto => github.com/unionlabs/gnark-crypto v0.0.0-20231016072529-15c0507b6578
-	github.com/cosmos/cosmos-sdk => github.com/unionlabs/cosmos-sdk-union v0.0.0-20241009174353-cb4ef3142d00
+	github.com/cosmos/cosmos-sdk => github.com/unionlabs/cosmos-sdk-union f2d7915254595f2ad647c09a874c4bfabefa90fd
 	github.com/cosmos/ibc-go/modules/capability => ../../capability
 )
